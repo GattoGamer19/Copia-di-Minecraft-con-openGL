@@ -11,6 +11,7 @@ class camera
 public:
 
 	glm::vec3 forward = glm::vec3(0.0f, 0.0f, -0.01f);
+	glm::vec3 forward1 = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 backward = glm::vec3(0.0f, 0.0f,0.01f);
 	glm::vec3 right = glm::vec3(0.01f, 0.0f, 0.0f);
 	glm::vec3 left = glm::vec3(-0.01f, 0.0f, 0.0f);
@@ -24,7 +25,7 @@ public:
 	glm::mat4 pro = glm::mat4(1.0f);
 
 	void rotate(float x, float y, float z, float angolo);
-	void move(int n, float sens);
+	void move(int n, float sens, float position[3]);
 	void proj(float degree, float min, float larghezza, float altezza, float max);
 
 };

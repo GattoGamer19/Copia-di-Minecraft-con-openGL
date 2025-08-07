@@ -145,7 +145,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Blocco.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="chunkGen.cpp" />
+    <ClCompile Include="collisioni.cpp" />
     <ClCompile Include="EBO.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Main.cpp" />
@@ -157,7 +160,10 @@
     <ClCompile Include="VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Blocco.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="chunkGen.h" />
+    <ClInclude Include="collisioni.h" />
     <ClInclude Include="Comandi.h" />
     <ClInclude Include="EBO.h" />
     <ClInclude Include="shaderClass.h" />
@@ -171,9 +177,15 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\Downloads\grass_texture.png" />
+    <Image Include="..\..\..\Downloads\grass_texture1.png" />
     <Image Include="..\..\..\Downloads\Texture.jpg" />
     <Image Include="..\..\..\Downloads\top_grass_block_texture.png" />
+    <Image Include="outline.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
     <Image Include="steve.png" />
+    <Image Include="terrain.png" />
+    <Image Include="terrain_atlas.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

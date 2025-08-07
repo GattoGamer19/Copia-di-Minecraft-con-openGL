@@ -6,9 +6,11 @@
 class EBO
 {
 public:
-	GLuint id;
+	GLuint id = 0;
 
-	EBO(GLuint* Indices, GLsizeiptr size);
+	EBO() = default;
+
+	void Gen(GLuint* Indices, GLsizeiptr size);
 
 	void Unbind();
 	void Bind();

@@ -51,6 +51,15 @@
     <ClCompile Include="Camera.cpp">
       <Filter>File di risorse</Filter>
     </ClCompile>
+    <ClCompile Include="Blocco.cpp">
+      <Filter>File di risorse</Filter>
+    </ClCompile>
+    <ClCompile Include="chunkGen.cpp">
+      <Filter>File di risorse</Filter>
+    </ClCompile>
+    <ClCompile Include="collisioni.cpp">
+      <Filter>File di risorse</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shaderClass.h">
@@ -74,6 +83,15 @@
     <ClInclude Include="Camera.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="Blocco.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="chunkGen.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="collisioni.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="default.vert">
@@ -94,6 +112,18 @@
       <Filter>File di origine\Textures</Filter>
     </Image>
     <Image Include="..\..\..\Downloads\grass_texture.png">
+      <Filter>File di origine\Textures</Filter>
+    </Image>
+    <Image Include="..\..\..\Downloads\grass_texture1.png">
+      <Filter>File di origine\Textures</Filter>
+    </Image>
+    <Image Include="terrain.png">
+      <Filter>File di origine\Textures</Filter>
+    </Image>
+    <Image Include="outline.png">
+      <Filter>File di origine\Textures</Filter>
+    </Image>
+    <Image Include="terrain_atlas.png">
       <Filter>File di origine\Textures</Filter>
     </Image>
   </ItemGroup>

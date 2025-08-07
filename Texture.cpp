@@ -26,7 +26,7 @@ Texture::Texture(GLuint shaderID, const char* imageName)
 
 	glUniform1i(tex0uni, 0);
 
-	std::cout << id<< " ";
+
 }
 
 void Texture::Bind()

@@ -6,9 +6,13 @@
 class VBO
 {
 public:
-	GLuint ids[1000];
+	int x = 0;
+	int z = 0;
+	GLuint ids[2];
 
-	VBO(GLfloat* vertex, GLsizeiptr size);
+	VBO() = default; 
+
+	void Gen(GLfloat* vertex, GLsizeiptr size);
 
 	void Unbind();
 	void Bind(GLuint id);
