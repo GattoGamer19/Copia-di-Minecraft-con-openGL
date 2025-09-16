@@ -14,12 +14,17 @@ void main()
 {
 
    FragColor = texture(tex0, Tex);
-   FragColor = vec4(FragColor.x + Color.x, FragColor.y + Color.y, FragColor.z + Color.z, 1);
+   FragColor = vec4(FragColor.x + Color.x, FragColor.y + Color.y, FragColor.z + Color.z, 1.0f);
 
    if(Count >= 0 && Count < 4)
    {
       highLightTexture = texture(tex0, Tex1);
-      FragColor = vec4(FragColor.x - highLightTexture.x, FragColor.y - highLightTexture.y, FragColor.z - highLightTexture.z,1);
+      FragColor = vec4(FragColor.x - highLightTexture.x, FragColor.y - highLightTexture.y, FragColor.z - highLightTexture.z,  FragColor.a);
+   }
+
+   else
+   {
+   FragColor = vec4(FragColor.x, FragColor.y, FragColor.z,  FragColor.a);
    }
 
 

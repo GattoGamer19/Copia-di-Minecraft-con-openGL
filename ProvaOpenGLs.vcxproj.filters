@@ -60,6 +60,9 @@
     <ClCompile Include="collisioni.cpp">
       <Filter>File di risorse</Filter>
     </ClCompile>
+    <ClCompile Include="highlight.cpp">
+      <Filter>File di risorse</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shaderClass.h">
@@ -90,6 +93,12 @@
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="collisioni.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="highlight.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="UVcord.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>

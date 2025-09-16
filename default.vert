@@ -22,7 +22,7 @@ void main()
  float y = aPos.y - 129 + 60;
 
 
-   gl_Position = proj * R *(view * vec4(-3.0f + aPos.x * 0.1f, y * 0.1f,-3.0f + aPos.z * 0.1f, 1.0f));
+   gl_Position = proj * R *(view * vec4(-0.5f + aPos.x * 0.1f, y * 0.1f,-0.5f + aPos.z * 0.1f, 1.0f));
 
    Color = aColor;
    Tex = aTex;
@@ -51,6 +51,11 @@ void main()
    else if(count == 4)
    {
      gl_Position = vec4(aPos.x * 0.035f, aPos.y * 0.035f, -0.99f, 1.0f);
+   }
+
+   else if (count == 5)
+   {
+     gl_Position = proj * vec4(-0.5f + aPos.x * 0.05f, -0.42f + aPos.y * 0.08f,-0.1f + aPos.z * 0.05f, 1.0f);
    }
 
    Count = count;

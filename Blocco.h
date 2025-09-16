@@ -22,6 +22,8 @@ public:
 
 	int chunkReference = 0;
 
+	int id = 0;
+
 	Blocco();
 	Blocco(int chunkReference);
 	void Render(VAO vao, VBO vbo);

@@ -11,7 +11,7 @@ void camera::rotate(float x, float y, float z, float angolo)
 	R = glm::rotate(R, glm::radians(angolo), glm::vec3(x, y, z));
 	R1 = glm::rotate(R1, glm::radians(angolo), glm::vec3(x, y, z));
 	forward = glm::vec3((temp * R1).x, (temp*R1).y, (temp * R1).z);
-	float magn = sqrtf((forward.x*forward.x) + (forward.y*forward.y) + (forward.z*forward.z));
+	float magn = sqrtf((forward.x*forward.x) + (forward.z*forward.z));
 	forward = glm::vec3(forward.x / magn, forward.y / magn, forward.z / magn);
 	backward = -forward;
 	right = glm::vec3(forward.z,0.0f, -forward.x);
