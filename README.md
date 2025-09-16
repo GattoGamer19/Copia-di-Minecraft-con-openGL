@@ -1,12 +1,12 @@
-# ProvaOpenGLs
+# MiNeCRafT
 IMPORTANTE
 non sono un esperto, la mia unica esperienza passata con c++ era un giochino di snake sulla console, tutto molto basic. Pertanto mi rendo conto che in quanto orrendo, il codice vi susciterà un irrifrenabile bisogno di lavarvi gli occhi con prodotti casalingi non adatti allo scopo.
 
 consiglio di guardare il progetto con visual studio 2022 perchè lì ordina i file automaticamente, non so se anche altri programmi come visual studio code lo facciano.
 qui troverete i progressi che ho fatto fino al giorno 6 e ogni tot aggiornerò questa repos.
-prima che mi iniziate ad attaccare vi dico che l'unica cosa che ho copiato inizialmente quando non capevo bene openGL è il file shaderClass.cpp, tutto il resto è di tasca mia. se non dovesse andare provate a runnare il file std.cpp. 
-Questa è la seconda versione che pubbico qui e vi dico che attualmente i "bug" principli sono 2: 
-- quando si esce dai 100 chunk caricati o o se si supera il limite minimo/massimo di altezza, il programma crasha, non ci vuole niente a risolverlo però voglio aspettare di avere un sistema vero e proprio di chunk loading per non dover ricostruire parte del codice.
-- si possono piazzare blocchi nel punto esatto in cui mi trovo bloccando i movimenti e anche se non me li dovesse bloccare, in generale non dovrebbe proprio esistere come meccanica, anche questo è veramente facile da risolvere.
-attualmente con il mio pc faccio sui 700-800 fps in media che ritengo molto buoni visto che non sto usando multi-threading(anche se dovrei, ma questo sarà un problema del me del futuro) o almeno li ritenevo molto buoni fino a quando non ho provato a caricare 400 chunk(la quantità renderizzata più o meno con la render distance a 20 chunk), oltre a richiedere tipo 20 secondi di caricamento iniziale, mi sono ritrovato a fare "solamente" 140-160 fps che non è proprio il massimo visto che non è che ci siano ancora molte cose in questa versione, e non ho la minima idea di come ottimizzare il tutto visto che è un problema di gestione grafica principalmente e non ho intenzione di aggiungere sistemi di culling avanzati,e non è un problema di lato cpu perchè anche eliminando tutta la parte del codice lasciando solo quella legata al rendering faccio solo 20 fps in più, penso quindi che l'unica soluzione sia imparare un po' di multithreading gpu-side e arrangiarmi. che poi adesso la sto facendo così brutta la situazione però faccio più fps di minecraft vanilla a parità bene o male di chunk generati, senza per l'appunto multi-threading, però a favore di minecraft vanilla bisogna considerare che adesso i suoi chunk sono alti 384 blocchi ma vabbè.
-un altro poblema come già parzialmente citato prima è che caricare i chunk richiede tanto tempo, o meglio, caricare tutti i chunk presenti in un frame richiede tanto tempo, che è quello che sto facendo, e visto che attualmente non ho la minima voglia di riguardare la spazzatura di codice che c'è nel chunkGen.cpp file, per distribuire il loading in più frame, anche questo sarà un problema del me di un futuro lontano.
+
+cose che un giorno farò:
+
+-risolvere un "bug" che si manifesta quando il rapporto fps/velocità in gioco è troppo alto si formano dei buchi perchè alcuni chunk non hanno il tempo di generarsi.
+-aggiungere gli alberi.
+-aggiungere il cielo.
