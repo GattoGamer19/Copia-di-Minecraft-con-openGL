@@ -76,7 +76,7 @@ public:
 	std::vector<GLuint> indices0;
 	std::vector<float> squareVertices;
 	
-	int posIsBlock[16 * 16 * 128];
+	char posIsBlock[16 * 16 * 128];
 
 	Chunk() = default;
 	void Create(int x, int y, GLuint vbo, GLuint ebo, std::vector<float>& allVertices);

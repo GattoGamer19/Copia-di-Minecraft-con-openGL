@@ -26,7 +26,9 @@
 
 float PI = 3.141592653589793;
 
-const int nChunkX = 15;
+bool collisionEnabled = true;
+
+int nChunkX = 15;
 int rChunkX = 15;
 int nChunkZ = 15;
 int rChunkZ = 15;
@@ -61,11 +63,11 @@ bool renderingZ = false;
 int nBZ = 1;
 bool renderingBZ = false;
 
-int ChunkVBOX[nChunkX];
-int ChunkVBOZ[nChunkX];
+std::vector<int> ChunkVBOX(nChunkX);
+std::vector<int> ChunkVBOZ(nChunkX);
 
-int frameSpeedZ = 7;
-int frameSpeedX = 7;
+int frameSpeedZ = 1;
+int frameSpeedX = 1;
 
 float pos0 = position[0];
 float pos1 = position[1];
@@ -119,7 +121,7 @@ int regChunkBZ = 0;
 int regChunkBZ1 = 0;
 
 
-	void moveArray(int array[], int size, int dir)
+	void moveArray(std::vector<int>& array, int size, int dir)
 	{
 		int n = -1;
 		int n1 = -1;
@@ -279,280 +281,348 @@ void genBX(int offsetZ, int offsetX, int x1, int z1)
 }
 bool onGround()
 {
-	return false;
-	currentChunk[0] = ((int)floorf(position[0] + 0.5f) - ((int)floorf(position[0] + 0.5f) % 16)) / 16;
-	currentChunk[1] = ((int)floorf(position[1] + 0.5f) - ((int)floorf(position[1] + 0.5f) % 16)) / 16;
+	if (collisionEnabled)
+	{	
 
-	if (currentChunk[1] < 0)
-	{
-		currentChunk[1] = abs(currentChunk[1]);
-		currentChunk[1] %= nChunkX;
-		currentChunk[1] = (nChunkX)-currentChunk[1];
+		currentChunk[0] = ((int)floorf(position[0] + 0.5f) - ((int)floorf(position[0] + 0.5f) % 16)) / 16;
+		currentChunk[1] = ((int)floorf(position[1] + 0.5f) - ((int)floorf(position[1] + 0.5f) % 16)) / 16;
 
+		if (currentChunk[1] < 0)
+		{
+			currentChunk[1] = abs(currentChunk[1]);
+			currentChunk[1] %= nChunkX;
+			currentChunk[1] = (nChunkX)-currentChunk[1];
+
+		}
+
+		if (currentChunk[0] < 0)
+		{
+			currentChunk[0] = abs(currentChunk[0]);
+			currentChunk[0] %= nChunkX;
+			currentChunk[0] = (nChunkX)-currentChunk[0];
+
+		}
+
+		chunkPosition[0] = position[0] - currentChunk[0] * 16 + 0.5f;
+		chunkPosition[1] = position[1] - currentChunk[1] * 16 + 0.5f;
+		chunkPosition[2] = position[2];
+		currentChunk[0] = (((int)floorf(position[0] + 0.5f) - ((int)floorf(position[0] + 0.5f) % 16)) / 16) % nChunkZ;
+		currentChunk[1] = (((int)floorf(position[1] + 0.5f) - ((int)floorf(position[1] + 0.5f) % 16)) / 16) % nChunkX;
+
+		if (currentChunk[1] < 0)
+		{
+			currentChunk[1] = abs(currentChunk[1]);
+			currentChunk[1] %= nChunkX;
+			currentChunk[1] = (nChunkX)-currentChunk[1];
+
+		}
+
+		if (currentChunk[0] < 0)
+		{
+			currentChunk[0] = abs(currentChunk[0]);
+			currentChunk[0] %= nChunkX;
+			currentChunk[0] = (nChunkX)-currentChunk[0];
+
+		}
+
+		int xOffset = chunkPosition[0] + 0.25f;
+		int xOffset1 = chunkPosition[0] - 0.25f;
+		int zOffset = chunkPosition[1] + 0.25f;
+		int zOffset1 = chunkPosition[1] - 0.25f;
+
+		int cZ = currentChunk[1];
+		int cZ1 = currentChunk[1];
+
+		int cX = currentChunk[0];
+		int cX1 = currentChunk[0];
+
+		if (chunkPosition[0] < 0.25f)
+		{
+			xOffset1 = xOffset;
+			xOffset = 15;
+			cX = currentChunk[0] - 1;
+			cX1 = currentChunk[0];
+		}
+
+		else if (chunkPosition[0] > 15.75f)
+		{
+			xOffset = 0;
+			cX = currentChunk[0] + 1;
+			cX1 = currentChunk[0];
+		}
+
+		if (chunkPosition[1] < 0.25f)
+		{
+			zOffset1 = zOffset;
+			zOffset = 15;
+			cZ = currentChunk[1] - 1;
+			cZ1 = currentChunk[1];
+		}
+
+		else if (chunkPosition[1] > 15.75f)
+		{
+			zOffset = 0;
+			cZ = currentChunk[1] + 1;
+			cZ1 = currentChunk[1];
+		}
+
+		cX %= nChunkX;
+		cX1 %= nChunkX;
+		cZ %= nChunkX;
+		cZ1 %= nChunkX;
+
+
+
+
+
+		if (chunk[cZ][cX].posIsBlock[(int)((roundf(position[2] - 1.8f) * 16 * 16) + (int)roundf(xOffset) + ((int)roundf(zOffset) * 16))])
+		{
+			return true;
+		}
+
+
+
+
+		if (chunk[cZ1][cX].posIsBlock[(int)((roundf(position[2] - 1.8f) * 16 * 16) + (int)roundf(xOffset) + ((int)roundf(zOffset1) * 16))])
+		{
+			return true;
+		}
+
+
+
+
+		if (chunk[cZ][cX1].posIsBlock[(int)((roundf(position[2] - 1.8f) * 16 * 16) + (int)roundf(xOffset1) + ((int)roundf(zOffset) * 16))])
+		{
+			return true;
+		}
+
+
+
+
+		if (chunk[cZ1][cX1].posIsBlock[(int)((roundf(position[2] - 1.8f) * 16 * 16) + (int)roundf(xOffset1) + ((int)roundf(zOffset1) * 16))])
+		{
+			return true;
+		}
+
+		return false;
 	}
 
-	if (currentChunk[0] < 0)
-	{
-		currentChunk[0] = abs(currentChunk[0]);
-		currentChunk[0] %= nChunkX;
-		currentChunk[0] = (nChunkX)-currentChunk[0];
-
-	}
-
-	chunkPosition[0] = position[0] - currentChunk[0] * 16 + 0.5f;
-	chunkPosition[1] = position[1] - currentChunk[1] * 16 + 0.5f;
-	chunkPosition[2] = position[2];
-	currentChunk[0] = (((int)floorf(position[0] + 0.5f) - ((int)floorf(position[0] + 0.5f) % 16)) / 16) % nChunkZ;
-	currentChunk[1] = (((int)floorf(position[1] + 0.5f) - ((int)floorf(position[1] + 0.5f) % 16)) / 16) % nChunkX;
-
-	if (currentChunk[1] < 0)
-	{
-		currentChunk[1] = abs(currentChunk[1]);
-		currentChunk[1] %= nChunkX;
-		currentChunk[1] = (nChunkX)-currentChunk[1];
-
-	}
-
-	if (currentChunk[0] < 0)
-	{
-		currentChunk[0] = abs(currentChunk[0]);
-		currentChunk[0] %= nChunkX;
-		currentChunk[0] = (nChunkX)-currentChunk[0];
-
-	}
-
-	int xOffset = chunkPosition[0] + 0.25f;
-	int xOffset1 = chunkPosition[0] - 0.25f;
-	int zOffset = chunkPosition[1] + 0.25f;
-	int zOffset1 = chunkPosition[1] - 0.25f;
-
-	int cZ = currentChunk[1];
-	int cZ1 = currentChunk[1];
-
-	int cX = currentChunk[0];
-	int cX1 = currentChunk[0];
-
-	if (chunkPosition[0] < 0.25f)
-	{
-		xOffset1 = xOffset;
-		xOffset = 15;
-		cX = currentChunk[0] - 1;
-		cX1 = currentChunk[0];
-	}
-
-	else if (chunkPosition[0] > 15.75f)
-	{
-		xOffset = 0;
-		cX = currentChunk[0] + 1;
-		cX1 = currentChunk[0];
-	}
-
-	if (chunkPosition[1] < 0.25f)
-	{
-		zOffset1 = zOffset;
-		zOffset = 15;
-		cZ = currentChunk[1] - 1;
-		cZ1 = currentChunk[1];
-	}
-
-	else if (chunkPosition[1] > 15.75f)
-	{
-		zOffset = 0;
-		cZ = currentChunk[1] + 1;
-		cZ1 = currentChunk[1];
-	}
-
-	cX %= nChunkX;
-	cX1 %= nChunkX;
-	cZ %= nChunkX;
-	cZ1 %= nChunkX;
-
-
-
-
-
-	if (chunk[cZ][cX].posIsBlock[(int)((roundf(position[2] - 1.25f) * 16 * 16) + (int)roundf(xOffset) + ((int)roundf(zOffset) * 16))])
-	{
-		return true;
-	}
-
-
-
-
-	if (chunk[cZ1][cX].posIsBlock[(int)((roundf(position[2] - 1.25f) * 16 * 16) + (int)roundf(xOffset) + ((int)roundf(zOffset1) * 16))])
-	{
-		return true;
-	}
-
-
-
-
-	if (chunk[cZ][cX1].posIsBlock[(int)((roundf(position[2] - 1.25f) * 16 * 16) + (int)roundf(xOffset1) + ((int)roundf(zOffset) * 16))])
-	{
-		return true;
-	}
-
-
-
-
-	if (chunk[cZ1][cX1].posIsBlock[(int)((roundf(position[2] - 1.25f) * 16 * 16) + (int)roundf(xOffset1) + ((int)roundf(zOffset1) * 16))])
-	{
-		return true;
-	}
-
-	return false;
-
+	else return false;
 }
 
 
 bool checkBlock()
 {
-
-	currentChunk[0] = ((int)floorf(position[0] + 0.5f) - ((int)floorf(position[0] + 0.5f) % 16)) / 16;
-	currentChunk[1] = ((int)floorf(position[1] + 0.5f) - ((int)floorf(position[1] + 0.5f) % 16)) / 16;
-
-	if (currentChunk[1] < 0)
+	if (collisionEnabled)
 	{
-		currentChunk[1] = abs(currentChunk[1]);
-		currentChunk[1] %= nChunkX;
-		currentChunk[1] = (nChunkX)-currentChunk[1];
+		currentChunk[0] = ((int)floorf(position[0] + 0.5f) - ((int)floorf(position[0] + 0.5f) % 16)) / 16;
+		currentChunk[1] = ((int)floorf(position[1] + 0.5f) - ((int)floorf(position[1] + 0.5f) % 16)) / 16;
 
-	}
+		if (currentChunk[1] < 0)
+		{
+			currentChunk[1] = abs(currentChunk[1]);
+			currentChunk[1] %= nChunkX;
+			currentChunk[1] = (nChunkX)-currentChunk[1];
 
-	if (currentChunk[0] < 0)
-	{
-		currentChunk[0] = abs(currentChunk[0]);
-		currentChunk[0] %= nChunkX;
-		currentChunk[0] = (nChunkX)-currentChunk[0];
+		}
 
-	}
+		if (currentChunk[0] < 0)
+		{
+			currentChunk[0] = abs(currentChunk[0]);
+			currentChunk[0] %= nChunkX;
+			currentChunk[0] = (nChunkX)-currentChunk[0];
 
-	chunkPosition[0] = position[0] - currentChunk[0] * 16 + 0.5f;
-	chunkPosition[1] = position[1] - currentChunk[1] * 16 + 0.5f;
-	chunkPosition[2] = position[2];
-	currentChunk[0] = (((int)floorf(position[0] + 0.5f) - ((int)floorf(position[0] + 0.5f) % 16)) / 16) % nChunkZ;
-	currentChunk[1] = (((int)floorf(position[1] + 0.5f) - ((int)floorf(position[1] + 0.5f) % 16)) / 16) % nChunkX;
+		}
 
-	if (currentChunk[1] < 0)
-	{
-		currentChunk[1] = abs(currentChunk[1]);
-		currentChunk[1] %= nChunkX;
-		currentChunk[1] = (nChunkX)-currentChunk[1];
+		chunkPosition[0] = position[0] - currentChunk[0] * 16 + 0.5f;
+		chunkPosition[1] = position[1] - currentChunk[1] * 16 + 0.5f;
+		chunkPosition[2] = position[2];
+		currentChunk[0] = (((int)floorf(position[0] + 0.5f) - ((int)floorf(position[0] + 0.5f) % 16)) / 16) % nChunkZ;
+		currentChunk[1] = (((int)floorf(position[1] + 0.5f) - ((int)floorf(position[1] + 0.5f) % 16)) / 16) % nChunkX;
 
-	}
+		if (currentChunk[1] < 0)
+		{
+			currentChunk[1] = abs(currentChunk[1]);
+			currentChunk[1] %= nChunkX;
+			currentChunk[1] = (nChunkX)-currentChunk[1];
 
-	if (currentChunk[0] < 0)
-	{
-		currentChunk[0] = abs(currentChunk[0]);
-		currentChunk[0] %= nChunkX;
-		currentChunk[0] = (nChunkX)-currentChunk[0];
+		}
 
-	}
+		if (currentChunk[0] < 0)
+		{
+			currentChunk[0] = abs(currentChunk[0]);
+			currentChunk[0] %= nChunkX;
+			currentChunk[0] = (nChunkX)-currentChunk[0];
 
-	int xOffset = chunkPosition[0] + 0.25f;
-	int xOffset1 = chunkPosition[0] - 0.25f;
-	int zOffset = chunkPosition[1] + 0.25f;
-	int zOffset1 = chunkPosition[1] - 0.25f;
+		}
 
-	int cZ = currentChunk[1];
-	int cZ1 = currentChunk[1];
+		int xOffset = chunkPosition[0] + 0.25f;
+		int xOffset1 = chunkPosition[0] - 0.25f;
+		int zOffset = chunkPosition[1] + 0.25f;
+		int zOffset1 = chunkPosition[1] - 0.25f;
 
-	int cX = currentChunk[0];
-	int cX1 = currentChunk[0];
+		int cZ = currentChunk[1];
+		int cZ1 = currentChunk[1];
 
-	if (chunkPosition[0] < 0.25f)
-	{
-		xOffset1 = xOffset;
-		xOffset = 15;
-		cX = currentChunk[0] - 1;
-		cX1 = currentChunk[0];
-	}
+		int cX = currentChunk[0];
+		int cX1 = currentChunk[0];
 
-	else if (chunkPosition[0] > 15.75f)
-	{
-		xOffset = 0;
-		cX = currentChunk[0] + 1;
-		cX1 = currentChunk[0];
-	}
+		if (chunkPosition[0] < 0.25f)
+		{
+			xOffset1 = xOffset;
+			xOffset = 15;
+			cX = currentChunk[0] - 1;
+			cX1 = currentChunk[0];
+		}
 
-	if (chunkPosition[1] < 0.25f)
-	{
-		zOffset1 = zOffset;
-		zOffset = 15;
-		cZ = currentChunk[1] - 1;
-		cZ1 = currentChunk[1];
-	}
+		else if (chunkPosition[0] > 15.75f)
+		{
+			xOffset = 0;
+			cX = currentChunk[0] + 1;
+			cX1 = currentChunk[0];
+		}
 
-	else if (chunkPosition[1] > 15.75f)
-	{
-		zOffset = 0;
-		cZ = currentChunk[1] + 1;
-		cZ1 = currentChunk[1];
-	}
+		if (chunkPosition[1] < 0.25f)
+		{
+			zOffset1 = zOffset;
+			zOffset = 15;
+			cZ = currentChunk[1] - 1;
+			cZ1 = currentChunk[1];
+		}
 
-	cX %= nChunkX;
-	cX1 %= nChunkX;
-	cZ %= nChunkX;
-	cZ1 %= nChunkX;
-	
+		else if (chunkPosition[1] > 15.75f)
+		{
+			zOffset = 0;
+			cZ = currentChunk[1] + 1;
+			cZ1 = currentChunk[1];
+		}
 
-		if (chunk[cZ][cX].posIsBlock[(int)((roundf(position[2] + 0.25f) * 16 * 16) + (int)roundf(xOffset) + ((int)roundf(zOffset) * 16))])
+		cX %= nChunkX;
+		cX1 %= nChunkX;
+		cZ %= nChunkX;
+		cZ1 %= nChunkX;
+
+
+		if (chunk[cZ][cX].posIsBlock[(int)((roundf(position[2] + 0.20f) * 16 * 16) + (int)roundf(xOffset) + ((int)roundf(zOffset) * 16))])
 		{
 			return true;
 		}
-	
 
 
-		 if (chunk[cZ1][cX].posIsBlock[(int)((roundf(position[2] + 0.25f) * 16 * 16) + (int)roundf(xOffset) + ((int)roundf(zOffset1) * 16))])
+
+		if (chunk[cZ1][cX].posIsBlock[(int)((roundf(position[2] + 0.20f) * 16 * 16) + (int)roundf(xOffset) + ((int)roundf(zOffset1) * 16))])
 		{
 			return true;
 		}
-	
 
 
-		if (chunk[cZ][cX1].posIsBlock[(int)((roundf(position[2] + 0.25f) * 16 * 16) + (int)roundf(xOffset1) + ((int)roundf(zOffset) * 16))])
+
+		if (chunk[cZ][cX1].posIsBlock[(int)((roundf(position[2] + 0.20f) * 16 * 16) + (int)roundf(xOffset1) + ((int)roundf(zOffset) * 16))])
 		{
 			return true;
 		}
-	
 
 
-		if (chunk[cZ1][cX1].posIsBlock[(int)((roundf(position[2] + 0.25f) * 16 * 16) + (int)roundf(xOffset1) + ((int)roundf(zOffset1) * 16))])
+
+		if (chunk[cZ1][cX1].posIsBlock[(int)((roundf(position[2] + 0.20f) * 16 * 16) + (int)roundf(xOffset1) + ((int)roundf(zOffset1) * 16))])
 		{
 			return true;
 		}
-	
+
+
 
 		if (chunk[cZ][cX].posIsBlock[(int)((roundf(position[2] - 0.75f) * 16 * 16) + (int)roundf(xOffset) + ((int)roundf(zOffset) * 16))])
 		{
 			return true;
 		}
-	
 
-	
+
+
 		if (chunk[cZ1][cX].posIsBlock[(int)((roundf(position[2] - 0.75f) * 16 * 16) + (int)roundf(xOffset) + ((int)roundf(zOffset1) * 16))])
 		{
 			return true;
 		}
-	
 
-	
+
+
 		if (chunk[cZ][cX1].posIsBlock[(int)((roundf(position[2] - 0.75f) * 16 * 16) + (int)roundf(xOffset1) + ((int)roundf(zOffset) * 16))])
 		{
 			return true;
 		}
-	
-	
+
+
+
 		if (chunk[cZ1][cX1].posIsBlock[(int)((roundf(position[2] - 0.75f) * 16 * 16) + (int)roundf(xOffset1) + ((int)roundf(zOffset1) * 16))])
 		{
 			return true;
 		}
-	
 
-	currentChunk[0] = abs((int)floorf(position[0] + 0.5f) - ((int)floorf(position[0] + 0.5f) % 16)) / 16;
-	currentChunk[1] = abs((int)floorf(position[1] + 0.5f) - ((int)floorf(position[1] + 0.5f) % 16)) / 16;
 
-	return false;
+		if (chunk[cZ][cX].posIsBlock[(int)((roundf(position[2] - 1.25f) * 16 * 16) + (int)roundf(xOffset) + ((int)roundf(zOffset) * 16))])
+		{
+			return true;
+		}
+
+
+
+		if (chunk[cZ1][cX].posIsBlock[(int)((roundf(position[2] - 1.25f) * 16 * 16) + (int)roundf(xOffset) + ((int)roundf(zOffset1) * 16))])
+		{
+			return true;
+		}
+
+
+
+		if (chunk[cZ][cX1].posIsBlock[(int)((roundf(position[2] - 1.25f) * 16 * 16) + (int)roundf(xOffset1) + ((int)roundf(zOffset) * 16))])
+		{
+			return true;
+		}
+
+
+		if (chunk[cZ1][cX1].posIsBlock[(int)((roundf(position[2] - 1.25f) * 16 * 16) + (int)roundf(xOffset1) + ((int)roundf(zOffset1) * 16))])
+		{
+			return true;
+		}
+
+
+		if (chunk[cZ][cX].posIsBlock[(int)((roundf(position[2] - 1.75f) * 16 * 16) + (int)roundf(xOffset) + ((int)roundf(zOffset) * 16))])
+		{
+			fallingSpeed = 0;
+			return true;
+		}
+
+
+		if (chunk[cZ1][cX].posIsBlock[(int)((roundf(position[2] - 1.75f) * 16 * 16) + (int)roundf(xOffset) + ((int)roundf(zOffset1) * 16))])
+		{
+			fallingSpeed = 0;
+			return true;
+		}
+
+
+
+
+		if (chunk[cZ][cX1].posIsBlock[(int)((roundf(position[2] - 1.75f) * 16 * 16) + (int)roundf(xOffset1) + ((int)roundf(zOffset) * 16))])
+		{
+			fallingSpeed = 0;
+			return true;
+		}
+
+
+
+
+		if (chunk[cZ1][cX1].posIsBlock[(int)((roundf(position[2] - 1.75f) * 16 * 16) + (int)roundf(xOffset1) + ((int)roundf(zOffset1) * 16))])
+		{
+			fallingSpeed = 0;
+			return true;
+		}
+
+
+		currentChunk[0] = abs((int)floorf(position[0] + 0.5f) - ((int)floorf(position[0] + 0.5f) % 16)) / 16;
+		currentChunk[1] = abs((int)floorf(position[1] + 0.5f) - ((int)floorf(position[1] + 0.5f) % 16)) / 16;
+
+		return false;
+	}
+
+	else return false;
 }
 
 
@@ -591,6 +661,49 @@ void Move(int asse, float sens)
 int main()
 {
 
+	std::cout << "Render Distance: " << std::endl;
+	std::cin >> nChunkX;
+
+	rChunkX = nChunkX;
+	nChunkZ = nChunkX;
+	rChunkZ = nChunkX;
+
+	offset = floor((float)nChunkX / 2);
+
+	position[0] = 5 + (offset * 16);
+	position[1] = 5 + (offset * 16);
+
+	pos0 = position[0];
+	pos1 = position[1];
+	pos2 = position[2];
+
+	ChunkVBOX.resize(nChunkX);
+	ChunkVBOZ.resize(nChunkX);
+	
+	ebo.resize(nChunkX);
+	vbo.resize(nChunkX);
+	chunk.resize(nChunkX);
+
+	isVisible.resize(nChunkX);
+
+	for (int i = 0; i < nChunkX; i++)
+	{
+		ebo[i].resize(nChunkX);
+		vbo[i].resize(nChunkX);
+		chunk[i].resize(nChunkX);
+
+		isVisible[i].resize(nChunkX);
+	}
+
+
+
+		base.resize(nChunkX);
+
+		baseChunkArray.resize(nChunkX);
+
+		std::cout << "Enter '1' for collision enabled, will also disable infinite world generation and may also crash going negativly on x and z axys" << std::endl;
+		std::cout << "Enter '0' to not enable" << std::endl;
+		std::cin >> collisionEnabled;
 
 	glfwInit();
 
@@ -1062,7 +1175,7 @@ int main()
 
 		
 
-			if (renderingBX && framePassed > frameSpeedZ)
+			if (renderingBX)
 			{
 				//std::cout << regChunkX1 << " " << regChunkZ1 << '\n';
 				//std::cout << nX << '\n';
@@ -1103,20 +1216,12 @@ int main()
 				}
 
 
-				framePassed = 0;
+				
 
 			}
-			else
-			{
-				framePassed++;
+			
 
-				if (framePassed > framePassed + 1)
-				{
-					framePassed = 0;
-				}
-			}
-
-			if (renderingX && framePassed > frameSpeedZ)
+			if (renderingX)
 			{
 				//std::cout << regChunkX1 << " " << regChunkZ1 << '\n';
 				//std::cout << nX << '\n';
@@ -1157,21 +1262,13 @@ int main()
 				}
 
 
-				framePassed = 0;
+				
 
-			}
-			else
-			{
-				framePassed++;
-
-				if (framePassed > framePassed + 1)
-				{
-					framePassed = 0;
-				}
 			}
 			
+			
 
-			if (renderingZ && framePassed > frameSpeedX)
+			if (renderingZ)
 			{
 
 				int x = (regChunkX + (nZ)) % nChunkX;
@@ -1214,17 +1311,8 @@ int main()
 
 			}
 
-			else if (renderingZ && framePassed <= frameSpeedX)
-			{
-				framePassed++;
 
-				if (framePassed > framePassed + 1)
-				{
-					framePassed = 0;
-				}
-			}
-
-			if (renderingBZ && framePassed > frameSpeedX)
+			if (renderingBZ)
 			{
 
 				int x = (regChunkBX + (nBZ)) % nChunkX;
@@ -1268,15 +1356,7 @@ int main()
 
 			}
 
-			else if (renderingBZ && framePassed <= frameSpeedX)
-			{
-				framePassed++;
-
-				if (framePassed > framePassed + 1)
-				{
-					framePassed = 0;
-				}
-			}
+	
 
 			position[0] = pos0;
 			position[1] = pos1;
@@ -1286,7 +1366,7 @@ int main()
 
 		//	std::cout << position[0] << " " << position[1]<<'\n';
 			
-				while (run)
+				while (run && collisionEnabled)
 				{
 					rayPoint += (cam.forward * 0.05f);
 					currentChunk[0] = abs(((int)floorf(rayPoint.x + 0.5f) - ((int)floorf(rayPoint.x + 0.5f) % 16)) / 16);
@@ -1483,13 +1563,20 @@ int main()
 				change = true;
 			}
 
+			if (GetAsyncKeyState('4') & 0x8000)
+			{
+				invBlock = 4;
+				change = true;
+			}
+
+
 			if (GetAsyncKeyState(VK_LBUTTON) & 1 && lookingBlock)
 			{
 				
 					chunk[currentChunk[1]][currentChunk[0]].Update(selectedBlockPosition[0], selectedBlockPosition[1], selectedBlockPosition[2], false, ebo[(currentChunk[1])][currentChunk[0]].id, vbo[(currentChunk[1])][currentChunk[0]].ids[1], allVerticesX,0);
 					kl = 0;
 				
-
+					PlaySound(TEXT("stone.wav"), NULL, SND_FILENAME | SND_ASYNC);
 			}
 
 			kl++;
@@ -1498,7 +1585,7 @@ int main()
 			{
 				
 					chunk[currentChunk2][currentChunk1].Update(placeBlockPosition[0], placeBlockPosition[1], placeBlockPosition[2], true, ebo[(currentChunk2)][currentChunk1].id, vbo[(currentChunk2)][currentChunk1].ids[1], allVerticesX,invBlock);
-				
+					PlaySound(TEXT("stone.wav"), NULL, SND_FILENAME | SND_ASYNC);
 
 			}
 
@@ -1555,12 +1642,8 @@ int main()
 					firstTime = false;
 				}
 
-				changeMouseX = (float)(P1.x - P.x) / 1920;
-				changeMouseY = (float)(P1.y - P.y) / 1080;
-				P1 = P;
-				P1.x += P1.x - 960;
-				P1.y += P1.y - 540;
-
+				changeMouseX = (float)(P.x - 960) / 1920;
+				changeMouseY = (float)(P.y - 540) / 1080;
 
 
 				SetCursorPos(960, 540);
@@ -1767,7 +1850,7 @@ int main()
 			{
 				Move(1, 0.52f * (clock() - before));
 				Move(12, 0.52f * (clock() - before));
-				Move(13, 0.5f * (clock() - before));
+				Move(13, 0.52f * (clock() - before));
 
 				before = clock();
 

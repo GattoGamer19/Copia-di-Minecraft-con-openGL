@@ -136,4 +136,9 @@
       <Filter>File di origine\Textures</Filter>
     </Image>
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\..\..\Downloads\stone.wav">
+      <Filter>File di risorse</Filter>
+    </Media>
+  </ItemGroup>
 </Project>

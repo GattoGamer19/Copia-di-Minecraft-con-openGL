@@ -20,9 +20,9 @@ public:
 
 	GLuint textureID = 1;
 
-	int chunkReference = 0;
+	char chunkReference = 0;
 
-	int id = 0;
+	char id = 0;
 
 	Blocco();
 	Blocco(int chunkReference);

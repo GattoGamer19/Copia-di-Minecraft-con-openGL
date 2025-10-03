@@ -738,6 +738,7 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float> &a
 	z = y1;
 	id = x + z * 41;
 	float y = 256;
+	int minHeight = 20;
 	sizeX = size * sizeX / scale;
 	sizeZ = size * sizeZ / scale;
 
@@ -784,7 +785,7 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float> &a
 			{
 				for (int x2 = 0; x2 < sizeX; x2++)
 				{
-					if (y1 < 15)
+					if (y1 < minHeight)
 					{
 						jk = x2 + (sizeZ * z2) + (sizeX * sizeZ * y1);
 						blocco0[jk] = { count };
@@ -793,7 +794,7 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float> &a
 						posIsBlock[jk] = stone;
 					}
 
-					else if (y1 - 15 <= heights[x2 + z2 * sizeX] && heights[x2 + z2 * sizeX] + 15 < 127)
+					else if (y1 - minHeight <= heights[x2 + z2 * sizeX] && heights[x2 + z2 * sizeX] + minHeight < 127)
 					{
 						jk = x2 + (sizeZ * z2) + (sizeX * sizeZ * y1);
 						blocco0[jk] = { count };
@@ -801,13 +802,13 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float> &a
 						blocco0[jk].id = dirtGrass;
 						posIsBlock[jk] = dirtGrass;
 
-						if (heights[x2 + z2 * sizeX] - (y1-15) > 4)
+						if (heights[x2 + z2 * sizeX] - (y1-minHeight) > 4)
 						{
 							blocco0[jk].id = stone;
 							posIsBlock[jk] = stone;
 						}
 
-						else if (heights[x2 + z2 * sizeX] - (y1-15) > 1)
+						else if (heights[x2 + z2 * sizeX] - (y1-minHeight) > 1)
 						{
 							blocco0[jk].id = dirt;
 							posIsBlock[jk] = dirt;
@@ -819,7 +820,7 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float> &a
 						count++;
 					}
 
-					else if (y1 < 20)
+					else if (y1 < minHeight + 5)
 					{
 						jk = x2 + (sizeZ * z2) + (sizeX * sizeZ * y1);
 						blocco0[jk].id = water;
@@ -1147,7 +1148,7 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float> &a
 	}
 
 	created = true;
-	
+	std::cout << allVertices.size() << '\n';
 }
 
 
