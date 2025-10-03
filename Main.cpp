@@ -26,11 +26,13 @@
 
 float PI = 3.141592653589793;
 
-const int nChunkX = 41;
-int rChunkX = 41;
-int nChunkZ = 41;
-int rChunkZ = 41;
+const int nChunkX = 15;
+int rChunkX = 15;
+int nChunkZ = 15;
+int rChunkZ = 15;
 int offset = floor((float)nChunkX / 2);
+
+float fallingSpeed = 0;
 
 float altezza = 1080;
 float larghezza = 1920;
@@ -277,8 +279,10 @@ void genBX(int offsetZ, int offsetX, int x1, int z1)
 }
 bool onGround()
 {
+	return false;
 	currentChunk[0] = ((int)floorf(position[0] + 0.5f) - ((int)floorf(position[0] + 0.5f) % 16)) / 16;
 	currentChunk[1] = ((int)floorf(position[1] + 0.5f) - ((int)floorf(position[1] + 0.5f) % 16)) / 16;
+
 	if (currentChunk[1] < 0)
 	{
 		currentChunk[1] = abs(currentChunk[1]);
@@ -363,41 +367,49 @@ bool onGround()
 	cZ %= nChunkX;
 	cZ1 %= nChunkX;
 
-	cX = ChunkVBOX[cX];
-	cX1 = ChunkVBOX[cX1];
-	cZ = ChunkVBOX[cZ];
-	cZ1 = ChunkVBOX[cZ1];
 
 
-	if (chunk[cZ][cX].posIsBlock[(int)((roundf(position[2] - 1.5f) * 16 * 16) + (int)roundf(xOffset) + ((int)roundf(zOffset) * 16))])
+
+
+	if (chunk[cZ][cX].posIsBlock[(int)((roundf(position[2] - 1.25f) * 16 * 16) + (int)roundf(xOffset) + ((int)roundf(zOffset) * 16))])
 	{
 		return true;
 	}
 
-	else if (chunk[cZ1][cX].posIsBlock[(int)((roundf(position[2] - 1.5f) * 16 * 16) + (int)roundf(xOffset) + ((int)roundf(zOffset1) * 16))])
+
+
+
+	if (chunk[cZ1][cX].posIsBlock[(int)((roundf(position[2] - 1.25f) * 16 * 16) + (int)roundf(xOffset) + ((int)roundf(zOffset1) * 16))])
 	{
 		return true;
 	}
 
-	else if (chunk[cZ][cX1].posIsBlock[(int)((roundf(position[2] - 1.5f) * 16 * 16) + (int)roundf(xOffset1) + ((int)roundf(zOffset) * 16))])
+
+
+
+	if (chunk[cZ][cX1].posIsBlock[(int)((roundf(position[2] - 1.25f) * 16 * 16) + (int)roundf(xOffset1) + ((int)roundf(zOffset) * 16))])
 	{
 		return true;
 	}
 
-	else if (chunk[cZ1][cX1].posIsBlock[(int)((roundf(position[2] - 1.5f) * 16 * 16) + (int)roundf(xOffset1) + ((int)roundf(zOffset1) * 16))])
+
+
+
+	if (chunk[cZ1][cX1].posIsBlock[(int)((roundf(position[2] - 1.25f) * 16 * 16) + (int)roundf(xOffset1) + ((int)roundf(zOffset1) * 16))])
 	{
 		return true;
 	}
 
-	currentChunk[0] = abs((int)floorf(position[0] + 0.5f) - ((int)floorf(position[0] + 0.5f) % 16)) / 16;
-	currentChunk[1] = abs((int)floorf(position[1] + 0.5f) - ((int)floorf(position[1] + 0.5f) % 16)) / 16;
+	return false;
 
 }
 
+
 bool checkBlock()
 {
-	currentChunk[0] = abs((int)floorf(position[0] + 0.5f) - ((int)floorf(position[0] + 0.5f) % 16)) / 16;
-	currentChunk[1] = abs((int)floorf(position[1] + 0.5f) - ((int)floorf(position[1] + 0.5f) % 16)) / 16;
+
+	currentChunk[0] = ((int)floorf(position[0] + 0.5f) - ((int)floorf(position[0] + 0.5f) % 16)) / 16;
+	currentChunk[1] = ((int)floorf(position[1] + 0.5f) - ((int)floorf(position[1] + 0.5f) % 16)) / 16;
 
 	if (currentChunk[1] < 0)
 	{
@@ -510,39 +522,6 @@ bool checkBlock()
 			return true;
 		}
 	
-
-
-
-		if (chunk[cZ][cX].posIsBlock[(int)((roundf(position[2] - 1.25f) * 16 * 16) + (int)roundf(xOffset) + ((int)roundf(zOffset) * 16))])
-		{
-			return true;
-		}
-
-	
-
-	
-		if (chunk[cZ1][cX].posIsBlock[(int)((roundf(position[2] - 1.25f) * 16 * 16) + (int)roundf(xOffset) + ((int)roundf(zOffset1) * 16))])
-		{
-			return true;
-		}
-	
-
-	
-
-		if (chunk[cZ][cX1].posIsBlock[(int)((roundf(position[2] - 1.25f) * 16 * 16) + (int)roundf(xOffset1) + ((int)roundf(zOffset) * 16))])
-		{
-			return true;
-		}
-
-	
-
-	
-		if (chunk[cZ1][cX1].posIsBlock[(int)((roundf(position[2] - 1.25f) * 16 * 16) + (int)roundf(xOffset1) + ((int)roundf(zOffset1) * 16))])
-		{
-			return true;
-		}
-	
-
 
 		if (chunk[cZ][cX].posIsBlock[(int)((roundf(position[2] - 0.75f) * 16 * 16) + (int)roundf(xOffset) + ((int)roundf(zOffset) * 16))])
 		{
@@ -1356,7 +1335,7 @@ int main()
 											placeBlockPosition[1] = selectedBlockPosition[1];
 											placeBlockPosition[2] = selectedBlockPosition[2];
 
-											rayPoint -= cam.forward * 0.005f;
+											rayPoint -= cam.forward * 0.0005f;
 
 											currentChunk1 = abs(((int)floorf(rayPoint.x + 0.5f) - ((int)floorf(rayPoint.x + 0.5f) % 16)) / 16);
 											currentChunk2 = abs(((int)floorf(rayPoint.z + 0.5f) - ((int)floorf(rayPoint.z + 0.5f) % 16)) / 16);
@@ -1696,8 +1675,11 @@ int main()
 
 				}
 
-
-
+				if (onGround())
+				{
+					fallingSpeed = 0;
+					std::cout << onGround();
+				}
 
 				if ((GetAsyncKeyState(VK_SPACE) & 1))
 				{
@@ -1706,6 +1688,7 @@ int main()
 					{
 						jumpT = clock();
 						isJumping = true;
+						fallingSpeed = 0;
 					}
 
 					if (click == 1 && clock() - spaceBarT > 300)
@@ -1725,7 +1708,7 @@ int main()
 						click = 0;
 					}
 
-					if (spaceBarT < 250 && spaceBarT > 70)
+					if (spaceBarT < 170 && spaceBarT > 100)
 					{
 
 						if (!creativeMode)
@@ -1743,8 +1726,8 @@ int main()
 
 				if (isJumping)
 				{
-					cam.forward1.y = 5.0f - sqrt((float)(clock() - jumpT) / 10);
-					if (4.0f - sqrt((float)(clock() - jumpT) / 10) < 0)
+					cam.forward1.y = 4.0f - sqrt((float)(clock() - jumpT) / 15);
+					if (3.25f - sqrt((float)(clock() - jumpT) / 15) < 0)
 					{
 						isJumping = false;
 					}
@@ -1755,9 +1738,10 @@ int main()
 					cam.forward1.y = 1.0f;
 				}
 
-				if (!creativeMode && !isJumping)
+				if (!creativeMode && !isJumping && !onGround())
 				{
-					cam.forward1.y = -2.0f;
+					fallingSpeed -= 0.02f * (clock() - before);
+					cam.forward1.y = fallingSpeed;
 				}
 
 				else
@@ -1783,7 +1767,7 @@ int main()
 			{
 				Move(1, 0.52f * (clock() - before));
 				Move(12, 0.52f * (clock() - before));
-				Move(13, 1.5f * (clock() - before));
+				Move(13, 0.5f * (clock() - before));
 
 				before = clock();
 

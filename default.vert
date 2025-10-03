@@ -22,7 +22,7 @@ void main()
  float y = aPos.y - 129 + 60;
 
 
-   gl_Position = proj * R *(view * vec4(-0.5f + aPos.x * 0.1f, y * 0.1f,-0.5f + aPos.z * 0.1f, 1.0f));
+   gl_Position = proj * R *(view * vec4(-0.5f + aPos.x * 0.1f, -0.01f + y * 0.1f,-0.5f + aPos.z * 0.1f, 1.0f));
 
    Color = aColor;
    Tex = aTex;
