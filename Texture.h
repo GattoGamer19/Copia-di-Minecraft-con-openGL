@@ -1,5 +1,6 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
+#define GL_TEXTURE_MAX_ANISOTROPY_EXT 0x84FE
 
 #include "stb/stb_image.h"	
 #include <glad/glad.h>

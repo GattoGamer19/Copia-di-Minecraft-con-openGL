@@ -11,22 +11,9 @@ class Blocco
 
 public:
 
-	bool RenderFront = true;
-	bool RenderBack = true;
-	bool RenderRight = true;
-	bool RenderLeft = true;
-	bool RenderTop = true;
-	bool RenderBottom = true;
-
-	GLuint textureID = 1;
-
-	char chunkReference = 0;
-
+	uint8_t renderFlags = 0b111111;
 	char id = 0;
 
-	Blocco();
-	Blocco(int chunkReference);
-	void Render(VAO vao, VBO vbo);
 
 };
 

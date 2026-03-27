@@ -8,10 +8,15 @@ out vec3 Color;
 out vec2 Tex;
 out vec2 Tex1;
 out float Count;
+out float dist;
 
 uniform mat4 R;
 uniform mat4 view;
 uniform mat4 proj;
+
+uniform float offsetX;
+uniform float offsetY;
+uniform float offsetZ;
 
 float xU = 16.0f / 256.0f;
 float yU = 16.0f / 256.0f;
@@ -19,14 +24,19 @@ float yU = 16.0f / 256.0f;
 void main()
 {
 
- float y = aPos.y - 129 + 60;
+ float y = aPos.y - 150;
+ 
+
+ vec4 aPos1 = view * vec4(offsetX + aPos.x * 0.01f, y * 0.01f,offsetZ + aPos.z * 0.01f, 1.0f);
 
 
-   gl_Position = proj * R *(view * vec4(-0.5f + aPos.x * 0.1f, y * 0.1f,-0.5f + aPos.z * 0.1f, 1.0f));
+   gl_Position = proj * R * view * vec4(offsetX + aPos.x * 0.01f, y * 0.01f,offsetZ + aPos.z * 0.01f, 1.0f);
 
    Color = aColor;
    Tex = aTex;
 
+   if(count != 5)
+    dist = sqrt((aPos1.x * aPos1.x) + ((aPos1.y * aPos1.y) * 0) + (aPos1.z * aPos1.z));
 
    if(count == 0)
    {

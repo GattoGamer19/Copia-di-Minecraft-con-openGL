@@ -1,4 +1,4 @@
-#ifndef COLLISIONI_H
+ifndef COLLISIONI_H
 #define COLLISIONI_H
 
 

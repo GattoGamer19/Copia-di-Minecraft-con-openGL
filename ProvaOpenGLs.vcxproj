@@ -29,28 +29,29 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <EnableASAN>false</EnableASAN>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -142,6 +143,8 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)Libraries\include\glad\glad.h;$(ProjectDir)Libraries\include\GLD3\include</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -156,12 +159,17 @@
     <ClCompile Include="Blocco.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="chunkGen.cpp" />
-    <ClCompile Include="collisioni.cpp" />
+    <ClCompile Include="collision.cpp" />
+    <ClCompile Include="createChunks.cpp" />
     <ClCompile Include="EBO.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="highlight.cpp" />
+    <ClCompile Include="InputSettings.cpp" />
+    <ClCompile Include="InputSettings.h" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Comandi.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="shaderClass.cpp" />
     <ClCompile Include="std.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -169,17 +177,22 @@
     <ClCompile Include="VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Users\gatto\Downloads\stb_easy_font.h" />
     <ClInclude Include="Blocco.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="chunkGen.h" />
-    <ClInclude Include="collisioni.h" />
+    <ClInclude Include="collision.h" />
     <ClInclude Include="Comandi.h" />
+    <ClInclude Include="createChunks.h" />
     <ClInclude Include="EBO.h" />
     <ClInclude Include="highlight.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Renderer.h" />
     <ClInclude Include="shaderClass.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="UVcord.h" />
     <ClInclude Include="VAO.h" />
+    <ClInclude Include="vars.h" />
     <ClInclude Include="VBO.h" />
   </ItemGroup>
   <ItemGroup>
@@ -196,6 +209,7 @@
     </Image>
     <Image Include="steve.png" />
     <Image Include="terrain.png" />
+    <Image Include="terrain1.png" />
     <Image Include="terrain_atlas.png" />
   </ItemGroup>
   <ItemGroup>

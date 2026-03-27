@@ -21,10 +21,10 @@ void VAO::Delete()
 	glDeleteVertexArrays(1, &id);
 }
 
-void VAO::LinkVBO(VBO VBO, int nDati, GLuint layout, GLuint id, GLuint stride, int offset)
+void VAO::LinkVBO(VBO VBO, int nDati, GLuint layout, GLuint id, GLuint stride, int offset, GLuint varType)
 {
 	VBO.Bind(id);
-    glVertexAttribPointer(layout, nDati, GL_FLOAT, GL_FALSE, stride * sizeof(float), (void*)(offset * sizeof(float)));
+    glVertexAttribPointer(layout, nDati, varType, GL_FALSE, stride * sizeof(float), (void*)(offset * sizeof(float)));
 	glEnableVertexAttribArray(layout);
 	VBO.Unbind();
 }

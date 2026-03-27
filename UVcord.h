@@ -1,6 +1,7 @@
 #ifndef UVCORD_H
 #define UVCORD_H
 
+#define UVoffset 48
 #define air 0
 #define dirtGrass 1
 #define oakPlanks 2
@@ -8,6 +9,8 @@
 #define stone 4
 #define dirt 5
 #define water 6
+#define snow 7
+#define oakLeaves 8
 
 struct uvCord
 {
@@ -49,32 +52,32 @@ struct uvCord
 		 0.5f, 0.5f,   0.5f,		-0.03f * contrasto, -0.03f * contrasto, -0.03f * contrasto,	 xU * 4, yU * 16, 3.0f,
 
 		 -0.5f,-0.5f ,  -0.5f,		-0.075f * contrasto, -0.075f * contrasto, -0.075f * contrasto,		(xU / 16) + xU * 3, (yU / 16) + yU * 15, 0.0f,
-		-0.5f, 0.5f ,  -0.5f,		-0.075f * contrasto, -0.075f * contrasto, -0.075f * contrasto,	(xU / 16) + xU * 3, yU * 16,1.0f,
-		 0.5f, -0.5f,  -0.5f,		-0.075f * contrasto, -0.075f * contrasto, -0.075f * contrasto,	xU * 4,(yU / 16) + yU * 15,2.0f,
-		 0.5f, 0.5f,   -0.5f,		-0.075f * contrasto, -0.075f * contrasto, -0.075f * contrasto,	xU * 4, yU * 16,3.0f,
+		-0.5f, 0.5f ,  -0.5f,		-0.075f * contrasto, -0.075f * contrasto, -0.075f * contrasto,	(xU / 16) + xU * 3, yU * 16,0.0f,
+		 0.5f, -0.5f,  -0.5f,		-0.075f * contrasto, -0.075f * contrasto, -0.075f * contrasto,	xU * 4,(yU / 16) + yU * 15,0.0f,
+		 0.5f, 0.5f,   -0.5f,		-0.075f * contrasto, -0.075f * contrasto, -0.075f * contrasto,	xU * 4, yU * 16,0.0f,
 
 		 0.5f,-0.5f ,  0.5f,		-0.04f * contrasto, -0.04f * contrasto, -0.04f * contrasto,		(xU / 16) + xU * 3, (yU / 16) + yU * 15,0.0f,
-		0.5f, 0.5f ,  0.5f,			-0.04f * contrasto, -0.04f * contrasto, -0.04f * contrasto,	(xU / 16) + xU * 3, yU * 16,1.0f,
-		 0.5f, -0.5f,  -0.5f,		-0.04f * contrasto, -0.04f * contrasto, -0.04f * contrasto,	xU * 4,(yU / 16) + yU * 15,2.0f,
-		 0.5f, 0.5f,   -0.5f,		-0.04f * contrasto, -0.04f * contrasto, -0.04f * contrasto,	xU * 4, yU * 16,3.0f,
+		0.5f, 0.5f ,  0.5f,			-0.04f * contrasto, -0.04f * contrasto, -0.04f * contrasto,	(xU / 16) + xU * 3, yU * 16,0.0f,
+		 0.5f, -0.5f,  -0.5f,		-0.04f * contrasto, -0.04f * contrasto, -0.04f * contrasto,	xU * 4,(yU / 16) + yU * 15,0.0f,
+		 0.5f, 0.5f,   -0.5f,		-0.04f * contrasto, -0.04f * contrasto, -0.04f * contrasto,	xU * 4, yU * 16,0.0f,
 
-		 -0.5f,-0.5f ,  0.5f,		-0.05f * contrasto, -0.05f * contrasto, -0.05f * contrasto,		(xU / 16) + xU * 3, (yU / 16) + yU * 15,0.f,
-		-0.5f, 0.5f ,  0.5f,		-0.05f * contrasto, -0.05f * contrasto, -0.05f * contrasto,	(xU / 16) + xU * 3, yU * 16,1.0f,
-		 -0.5f, -0.5f,  -0.5f,		-0.05f * contrasto, -0.05f * contrasto, -0.05f * contrasto,	xU * 4,(yU / 16) + yU * 15,2.0f,
-		 -0.5f, 0.5f,   -0.5f,		-0.05f * contrasto, -0.05f * contrasto, -0.05f * contrasto,	xU * 4, yU * 16,3.0f,
+		 -0.5f,-0.5f ,  0.5f,		-0.05f * contrasto, -0.05f * contrasto, -0.05f * contrasto,		(xU / 16) + xU * 3, (yU / 16) + yU * 15,0.0f,
+		-0.5f, 0.5f ,  0.5f,		-0.05f * contrasto, -0.05f * contrasto, -0.05f * contrasto,	(xU / 16) + xU * 3, yU * 16,0.0f,
+		 -0.5f, -0.5f,  -0.5f,		-0.05f * contrasto, -0.05f * contrasto, -0.05f * contrasto,	xU * 4,(yU / 16) + yU * 15,0.0f,
+		 -0.5f, 0.5f,   -0.5f,		-0.05f * contrasto, -0.05f * contrasto, -0.05f * contrasto,	xU * 4, yU * 16,0.0f,
 
 		  -0.5f, 0.5f ,  0.5f,		0.0f * contrasto, 0.0f * contrasto, 0.0f * contrasto,		0, (yU / 16.0f) + yU * 15,0.0f,
-		-0.5f, 0.5f ,  -0.5f,		0.0f * contrasto, 0.0f * contrasto, 0.0f * contrasto,	0, yU * 16,1.0f,
-		 0.5f, 0.5f,   0.5f,		0.0f * contrasto, 0.0f * contrasto, 0.0f * contrasto,	  xU,(yU / 16.0f) + yU * 15,2.0f,
-		 0.5f, 0.5f,   -0.5f,		0.0f * contrasto, 0.0f * contrasto, 0.0f * contrasto,	  xU, yU * 16,3.0f,
+		-0.5f, 0.5f ,  -0.5f,		0.0f * contrasto, 0.0f * contrasto, 0.0f * contrasto,	0, yU * 16,0.0f,
+		 0.5f, 0.5f,   0.5f,		0.0f * contrasto, 0.0f * contrasto, 0.0f * contrasto,	  xU,(yU / 16.0f) + yU * 15,0.0f,
+		 0.5f, 0.5f,   -0.5f,		0.0f * contrasto, 0.0f * contrasto, 0.0f * contrasto,	  xU, yU * 16,0.0f,
 
 		 -0.5f,-0.5f ,  0.5f,		-0.115f * contrasto, -0.115f * contrasto, -0.115f * contrasto,		(xU / 16) + xU * 2,(yU / 16) + yU * 15,0.0f,
-		-0.5f, -0.5f ,  -0.5f,		-0.115f * contrasto, -0.115f * contrasto, -0.115f * contrasto,		(xU / 16) + xU * 2, yU * 16,1.0f,
-		 0.5f, -0.5f,  0.5f,		-0.115f * contrasto, -0.115f * contrasto, -0.115f * contrasto,		xU * 3, (yU / 16) + yU * 15,2.0f,
-		 0.5f, -0.5f,   -0.5f,		-0.115f * contrasto, -0.115f * contrasto, -0.115f * contrasto,		xU * 3, yU * 16,3.0f
+		-0.5f, -0.5f ,  -0.5f,		-0.115f * contrasto, -0.115f * contrasto, -0.115f * contrasto,		(xU / 16) + xU * 2, yU * 16,0.0f,
+		 0.5f, -0.5f,  0.5f,		-0.115f * contrasto, -0.115f * contrasto, -0.115f * contrasto,		xU * 3, (yU / 16) + yU * 15,0.0f,
+		 0.5f, -0.5f,   -0.5f,		-0.115f * contrasto, -0.115f * contrasto, -0.115f * contrasto,		xU * 3, yU * 16,0.0f
 	};
 
-	float uvCords[7 * 48] =
+	float uvCords[9 * 48] =
 	{
 		//air
 		
@@ -110,7 +113,7 @@ struct uvCord
 
 		//dirt grass
 
-		 (x / 16) + x * 3, (y / 16) + y * 15,
+		(x / 16) + x * 3, (y / 16) + y * 15,
 		 (x / 16) + x * 3, y * 16,
 		 x * 4,(y / 16) + y * 15,
 		 x * 4, y * 16,
@@ -139,8 +142,38 @@ struct uvCord
 		 (x / 16) + x * 2, y * 16,
 		  x * 3, (y / 16) + y * 15,
 		  x * 3, y * 16,
+		  
+		  /*
+		 (x / 16) + x * 9, y * 8,
+		  (x / 16) + x * 9,(y / 16) + y * 2,
+		   x * 15,y * 8,
+		   x * 15, (y / 16) + y * 2,
 
+			(x / 16) + x * 9, y * 8,
+		  (x / 16) + x * 9,(y / 16) + y * 2,
+		   x * 15,y * 8,
+		   x * 15, (y / 16) + y * 2,
 
+			(x / 16) + x * 9, y * 8,
+		  (x / 16) + x * 9,(y / 16) + y * 2,
+		   x * 15,y * 8,
+		   x * 15, (y / 16) + y * 2,
+
+			(x / 16) + x * 9, y * 8,
+		  (x / 16) + x * 9,(y / 16) + y * 2,
+		   x * 15,y * 8,
+		   x * 15, (y / 16) + y * 2,
+
+			(x / 16) + x * 9, y * 8,
+		  (x / 16) + x * 9,(y / 16) + y * 2,
+		   x * 15,y * 8,
+		   x * 15, (y / 16) + y * 2,
+
+			(x / 16) + x * 9, y * 8,
+		  (x / 16) + x * 9,(y / 16) + y * 2,
+		   x * 15,y * 8,
+		   x * 15, (y / 16) + y * 2,
+		   */
 		  //oak planks
 
 
@@ -305,7 +338,70 @@ struct uvCord
 			  x * 15, y * 2,
 			  x * 15, y * 3,
 			  x * 16, y * 2,
-			  x * 16, y * 3
+			  x * 16, y * 3,
+
+			  //snow
+
+			  x * 2, y * 11,
+			  x * 2, y * 12,
+			  x * 3, y * 11,
+			  x * 3, y * 12,
+			  
+			  x * 2, y * 11,
+			  x * 2, y * 12,
+			  x * 3, y * 11,
+			  x * 3, y * 12,
+
+			  x * 2, y * 11,
+			  x * 2, y * 12,
+			  x * 3, y * 11,
+			  x * 3, y * 12,
+
+			  x * 2, y * 11,
+			  x * 2, y * 12,
+			  x * 3, y * 11,
+			  x * 3, y * 12,
+
+			  x * 2, y * 11,
+			  x * 2, y * 12,
+			  x * 3, y * 11,
+			  x * 3, y * 12,
+
+			  x * 2, y * 11,
+			  x * 2, y * 12,
+			  x * 3, y * 11,
+			  x * 3, y * 12,
+
+			  //oakLeaves
+			  x * 5, y * 7,
+			  x * 5, y * 8,
+			  x * 6, y * 7,
+			  x * 6, y * 8,
+
+			  x * 5, y * 7,
+			  x * 5, y * 8,
+			  x * 6, y * 7,
+			  x * 6, y * 8,
+
+			  x * 5, y * 7,
+			  x * 5, y * 8,
+			  x * 6, y * 7,
+			  x * 6, y * 8,
+
+			  x * 5, y * 7,
+			  x * 5, y * 8,
+			  x * 6, y * 7,
+			  x * 6, y * 8,
+
+			  x * 5, y * 7,
+			  x * 5, y * 8,
+			  x * 6, y * 7,
+			  x * 6, y * 8,
+
+			  x * 5, y * 7,
+			  x * 5, y * 8,
+			  x * 6, y * 7,
+			  x * 6, y * 8,
 	};
 };
 
