@@ -1,12 +1,6 @@
 #include "Comandi.h"
-#include "vars.h"
-#include <iostream>
-#include <Windows.h>
-#include <math.h>
-#include <glad/glad.h>
-#include "collision.h"
-#include "Player.h"
-
+#include "Inventory.h"
+#include <GLFW/glfw3.h>
 
 void Comandi::MoveDir(int asse, float sens, Player& player, std::unordered_map<int, std::unordered_map<int, std::array<int, 2>>>& chunkAssignedVBO)
 {
@@ -75,8 +69,8 @@ void Comandi::Move(Player& player, float speed, std::unordered_map<int, std::uno
 
 	if ((GetAsyncKeyState('R') & 0x8000) && (GetAsyncKeyState(VK_LCONTROL) & 0x8000))
 	{
-		cam.forward1.x = cam.forward.x + cam.forward.x * 20.2f;
-		cam.forward1.z = cam.forward.z + cam.forward.z * 20.2f;
+		cam.forward1.x = cam.forward.x + cam.forward.x * 40.2f;
+		cam.forward1.z = cam.forward.z + cam.forward.z * 40.2f;
 		//cam.forward1.y = cam.forward.y + cam.forward.y * 20.2f;
 
 
@@ -181,10 +175,10 @@ void Comandi::Move(Player& player, float speed, std::unordered_map<int, std::uno
 	{
 		if (fallingSpeed > -50)
 		{
-			fallingSpeed -= 0.02f * (clock() - before);
-			cam.forward1.y = fallingSpeed;
+			fallingSpeed -= 0.02f * (clock() - before);			
 		}
 
+		cam.forward1.y = fallingSpeed;
 	}
 
 	else
@@ -212,7 +206,11 @@ if (clock() - before > 1)
 {
 	MoveDir(1, speed * (clock() - before), player, chunkAssignedVBO);
 	MoveDir(12, speed * (clock() - before), player, chunkAssignedVBO);
-	MoveDir(13, speed * 10 * (clock() - before), player, chunkAssignedVBO);
+
+	if(creativeMode)
+		MoveDir(13, speed * 10 * (clock() - before), player, chunkAssignedVBO);
+	else
+		MoveDir(13, speed * (clock() - before), player, chunkAssignedVBO);
 
 	before = clock();
 
@@ -222,31 +220,63 @@ if (clock() - before > 1)
 
 }
 
-void Comandi::GetInvBlock()
+void Comandi::GetInvBlock(Inventory& inv)
 {
 	if (GetAsyncKeyState('1') & 0x8000)
 	{
-		invBlock = 1;
+		inv.changeSelectedBlock(0);
 		change = true;
 	}
 
 	if (GetAsyncKeyState('2') & 0x8000)
 	{
-		invBlock = 2;
+		inv.changeSelectedBlock(1);
 		change = true;
 	}
 
 	if (GetAsyncKeyState('3') & 0x8000)
 	{
-		invBlock = 3;
+		inv.changeSelectedBlock(2);
 		change = true;
 	}
 
 	if (GetAsyncKeyState('4') & 0x8000)
 	{
-		invBlock = 4;
+		inv.changeSelectedBlock(3);
 		change = true;
 	}
+
+	if (GetAsyncKeyState('5') & 0x8000)
+	{
+		inv.changeSelectedBlock(4);
+		change = true;
+	}
+
+	if (GetAsyncKeyState('6') & 0x8000)
+	{
+		inv.changeSelectedBlock(5);
+		change = true;
+	}
+
+	if (GetAsyncKeyState('7') & 0x8000)
+	{
+		inv.changeSelectedBlock(6);
+		change = true;
+	}
+
+	if (GetAsyncKeyState('8') & 0x8000)
+	{
+		inv.changeSelectedBlock(7);
+		change = true;
+	}
+
+	if (GetAsyncKeyState('9') & 0x8000)
+	{
+		inv.changeSelectedBlock(8);
+		change = true;
+	}
+	
+
 }
 
 void Comandi::checkRotEnabled()

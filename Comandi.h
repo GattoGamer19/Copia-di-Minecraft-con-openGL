@@ -7,6 +7,9 @@
 #include <glad/glad.h>
 #include "Player.h"
 #include <array>
+#include "collision.h"
+
+class Inventory;
 
 class Comandi
 {
@@ -30,7 +33,7 @@ private:
 public:
 	
 	void Move(Player& player, float speed, std::unordered_map<int, std::unordered_map<int, std::array<int, 2>>>& chunkAssignedVBO);
-	void GetInvBlock();
+	void GetInvBlock(Inventory& inv);
 	void checkRotEnabled();
 	void getMouseMovement(float& x, float& y);
 	void Rotate(float x, float y, float sensX, float sensY);

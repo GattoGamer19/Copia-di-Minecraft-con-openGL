@@ -26,7 +26,7 @@ struct uvCord
 
 	float s = 0.25;
 
-	float contrasto = 1.55f;
+	float contrasto = 2.55f;
 
 	GLuint indices[36] = {
 		0, 1, 2,
@@ -51,15 +51,15 @@ struct uvCord
 		 0.5f, -0.5f,  0.5f,		-0.03f * contrasto, -0.03f * contrasto, -0.03f * contrasto,	 xU * 4,(yU / 16) + yU * 15, 2.0f,
 		 0.5f, 0.5f,   0.5f,		-0.03f * contrasto, -0.03f * contrasto, -0.03f * contrasto,	 xU * 4, yU * 16, 3.0f,
 
-		 -0.5f,-0.5f ,  -0.5f,		-0.075f * contrasto, -0.075f * contrasto, -0.075f * contrasto,		(xU / 16) + xU * 3, (yU / 16) + yU * 15, 0.0f,
-		-0.5f, 0.5f ,  -0.5f,		-0.075f * contrasto, -0.075f * contrasto, -0.075f * contrasto,	(xU / 16) + xU * 3, yU * 16,0.0f,
-		 0.5f, -0.5f,  -0.5f,		-0.075f * contrasto, -0.075f * contrasto, -0.075f * contrasto,	xU * 4,(yU / 16) + yU * 15,0.0f,
-		 0.5f, 0.5f,   -0.5f,		-0.075f * contrasto, -0.075f * contrasto, -0.075f * contrasto,	xU * 4, yU * 16,0.0f,
+		 -0.5f,-0.5f ,  -0.5f,		-0.06f * contrasto, -0.06f * contrasto, -0.06f * contrasto,		(xU / 16) + xU * 3, (yU / 16) + yU * 15, 0.0f,
+		-0.5f, 0.5f ,  -0.5f,		-0.06f * contrasto, -0.06f * contrasto, -0.06f * contrasto,	(xU / 16) + xU * 3, yU * 16,0.0f,
+		 0.5f, -0.5f,  -0.5f,		-0.06f * contrasto, -0.06f * contrasto, -0.06f * contrasto,	xU * 4,(yU / 16) + yU * 15,0.0f,
+		 0.5f, 0.5f,   -0.5f,		-0.06f * contrasto, -0.06f * contrasto, -0.06f * contrasto,	xU * 4, yU * 16,0.0f,
 
-		 0.5f,-0.5f ,  0.5f,		-0.04f * contrasto, -0.04f * contrasto, -0.04f * contrasto,		(xU / 16) + xU * 3, (yU / 16) + yU * 15,0.0f,
-		0.5f, 0.5f ,  0.5f,			-0.04f * contrasto, -0.04f * contrasto, -0.04f * contrasto,	(xU / 16) + xU * 3, yU * 16,0.0f,
-		 0.5f, -0.5f,  -0.5f,		-0.04f * contrasto, -0.04f * contrasto, -0.04f * contrasto,	xU * 4,(yU / 16) + yU * 15,0.0f,
-		 0.5f, 0.5f,   -0.5f,		-0.04f * contrasto, -0.04f * contrasto, -0.04f * contrasto,	xU * 4, yU * 16,0.0f,
+		 0.5f,-0.5f ,  0.5f,		-0.08f * contrasto, -0.08f * contrasto, -0.08f * contrasto,		(xU / 16) + xU * 3, (yU / 16) + yU * 15,0.0f,
+		0.5f, 0.5f ,  0.5f,			-0.08f * contrasto, -0.08f * contrasto, -0.08f * contrasto,	(xU / 16) + xU * 3, yU * 16,0.0f,
+		 0.5f, -0.5f,  -0.5f,		-0.08f * contrasto, -0.08f * contrasto, -0.08f * contrasto,	xU * 4,(yU / 16) + yU * 15,0.0f,
+		 0.5f, 0.5f,   -0.5f,		-0.08f * contrasto, -0.08f * contrasto, -0.08f * contrasto,	xU * 4, yU * 16,0.0f,
 
 		 -0.5f,-0.5f ,  0.5f,		-0.05f * contrasto, -0.05f * contrasto, -0.05f * contrasto,		(xU / 16) + xU * 3, (yU / 16) + yU * 15,0.0f,
 		-0.5f, 0.5f ,  0.5f,		-0.05f * contrasto, -0.05f * contrasto, -0.05f * contrasto,	(xU / 16) + xU * 3, yU * 16,0.0f,

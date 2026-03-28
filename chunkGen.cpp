@@ -62,8 +62,8 @@ float interpolate(float a0, float a1, float w)
 float perlin(float x, float y, int seed) {
 
 	// Determine grid cell corner coordinates
-	int x0 = (int)x;
-	int y0 = (int)y;
+	int x0 = (int)floor(x);
+	int y0 = (int)floor(y);
 	int x1 = x0 + 1;
 	int y1 = y0 + 1;
 
@@ -937,9 +937,12 @@ void Chunk::placeTree(std::vector<unsigned char>& posIsBlock, std::vector<Blocco
 
 	for (int y1 = _y; y1 < _y + treeHeight; y1++)
 	{
-		int index = _x + (sizeZ * _z) + (sizeX * sizeZ * y1);
-		posIsBlock[index] = oakLog;
-		blocco[index].id = oakLog;
+		if (y1 < sizeY - 2)
+		{
+			int index = _x + (sizeZ * _z) + (sizeX * sizeZ * y1);
+			posIsBlock[index] = oakLog;
+			blocco[index].id = oakLog;
+		}
 	}
 
 
@@ -955,7 +958,7 @@ void Chunk::placeTree(std::vector<unsigned char>& posIsBlock, std::vector<Blocco
 			{
 				float centerDist = sqrtf((abs(x1 - _x) * abs(x1 - _x)) + (centerDistZ * centerDistZ) + (centerDistY * centerDistY));
 
-				if (x1 >= 0 && x1 < sizeX && z1 >= 0 && z1 < sizeX)
+				if (x1 >= 0 && x1 < sizeX && z1 >= 0 && z1 < sizeX && y1 < sizeY - 2)
 				{
 					float px = 10000.3f + (((x1 - (offsetX / 2))) + (x * (sizeX - (offsetX))));
 					float pz = 10000.2f + (((z1 - (offsetX / 2))) + (z * (sizeX - (offsetX))));
@@ -992,8 +995,6 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float>& a
 	z = y1;
 
 
-	std::cout <<':' << shift << '\n';
-
 	sizeX = size * (sizeX + offsetX) / scale;
 	sizeZ = size * (sizeZ + offsetX) / scale;
 	posIsBlock.resize(sizeX * sizeX * sizeY);
@@ -1013,9 +1014,9 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float>& a
 	float pianeggiantezza = -0.5f + ((perlin((100000.0f + (x / 3.0f)) / 5, (100000.0f + (z / 3.0f)) / 5, seed) + 1) / 2) * 3;
 	
 	
-	float cx = x + 100000.0f;
+	float cx = x;
 	float cf = (1.0f / (chunkSize / multiplier));
-	float cz = z + 100000.0f;
+	float cz = z;
 	srand(seed);
 
 	//std::cout << "pianeggiantezza: " << pianeggiantezza << '\n';
@@ -1026,7 +1027,7 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float>& a
 		for (int j = -(offsetX / 2); j < (sizeX + (offsetX / 2)); j++)
 		{
 			generalHeight = ((perlin((cx + (cf * j)) / (5 * amplifier), (cz + (cf * i)) / (5 * amplifier), seed) + 1) / 2);
-			pianeggiantezza = -0.5f + ((perlin((100000.0f + ((x + (cf * j)) / 4.5f)) / (5 * amplifier), (100000.0f + ((z + (cf * i)) / 4.5f)) / (5 * amplifier), seed) + 1) / 2) * 3;
+			pianeggiantezza = -0.5f + ((perlin((((x + (cf * j)) / 4.5f)) / (5 * amplifier), (((z + (cf * i)) / 4.5f)) / (5 * amplifier), seed) + 1) / 2) * 3;
 			pianeggiantezza *= pianeggiantezza * amplifier;
 			generalHeight *= generalHeight;
 			generalHeight *= generalHeight * 1.1f;
@@ -1034,13 +1035,13 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float>& a
 
 			int index = (j + (offsetX / 2)) + (i + (offsetX / 2)) * sizeX;
 
-			float verdos = ((perlin((200000.0f + ((x + (cf * j)) / 5.5f)) / (5 * amplifier), (200000.0f + ((z + (cf * i)) / 5.5f)) / (5 * amplifier), seed) + 1) / 4);
-			verdos1[index] = ((perlin(1000000 + 1 + (x * (300.5f * amplifier)) + (((300.5f * amplifier) / (chunkSize / multiplier)) * j) + 1, 1000000 + 1 + (z * (300.5f * amplifier)) + (((300.5f * amplifier) / (chunkSize / multiplier)) * i) + 1, seed) + 1) * 0.5f);
+			float verdos = ((perlin((((x + (cf * j)) / 5.5f)) / (5 * amplifier), (((z + (cf * i)) / 5.5f)) / (5 * amplifier), seed) + 1) / 4);
+			verdos1[index] = ((perlin(1 + (x * (300.5f * amplifier)) + (((300.5f * amplifier) / (chunkSize / multiplier)) * j) + 1,1 + (z * (300.5f * amplifier)) + (((300.5f * amplifier) / (chunkSize / multiplier)) * i) + 1, seed) + 1) * 0.5f);
 			verdos1[index] += verdos;
 
-			heights[index] = (pianeggiantezza * pianeggiantezza * 15) + ((perlin(1000000 + 1 + (x * (1.0f / amplifier)) + (((1.0f / amplifier) / (chunkSize / multiplier)) * j) + 1, 1000000 + 1 + (z * (1.0f / amplifier)) + (((1.0f / amplifier) / (chunkSize / multiplier)) * i) + 1, seed) + 1) * 0.5f) * generalHeight * amplifier;
-			stoneHeights[index] = (50 * amplifier) + heights[(j + (offsetX / 2)) + (i + (offsetX / 2)) * sizeX] - ((perlin(1000000 + 1 + (x * (3.5f * amplifier)) + (((3.5f * amplifier) / (chunkSize / multiplier)) * j) + 1, 1000000 + 1 + (z * (3.5f * amplifier)) + (((3.5f * amplifier) / (chunkSize / multiplier)) * i) + 1, seed) + 1) * 0.5f) * pianeggiantezza * pianeggiantezza * pianeggiantezza * (30.7f * amplifier);
-			snowHeights[index] = (150 * amplifier) - ((perlin(1000000 + 1 + (x * (3.5f * amplifier)) + (((3.5f * amplifier) / (chunkSize / multiplier)) * j) + 1, 1000000 + 1 + (z * (3.5f * amplifier)) + (((3.5f * amplifier) / (chunkSize / multiplier)) * i) + 1, seed) + 1) * 0.5f) * pianeggiantezza * pianeggiantezza * pianeggiantezza;
+			heights[index] = (pianeggiantezza * pianeggiantezza * 15) + ((perlin(1 + (x * (1.0f / amplifier)) + (((1.0f / amplifier) / (chunkSize / multiplier)) * j) + 1, 1 + (z * (1.0f / amplifier)) + (((1.0f / amplifier) / (chunkSize / multiplier)) * i) + 1, seed) + 1) * 0.5f) * generalHeight * amplifier;
+			stoneHeights[index] = (50 * amplifier) + heights[(j + (offsetX / 2)) + (i + (offsetX / 2)) * sizeX] - ((perlin(1 + (x * (3.5f * amplifier)) + (((3.5f * amplifier) / (chunkSize / multiplier)) * j) + 1, 1 + (z * (3.5f * amplifier)) + (((3.5f * amplifier) / (chunkSize / multiplier)) * i) + 1, seed) + 1) * 0.5f) * pianeggiantezza * pianeggiantezza * pianeggiantezza * (30.7f * amplifier);
+			snowHeights[index] = (150 * amplifier) - ((perlin(1 + (x * (3.5f * amplifier)) + (((3.5f * amplifier) / (chunkSize / multiplier)) * j) + 1, 1 + (z * (3.5f * amplifier)) + (((3.5f * amplifier) / (chunkSize / multiplier)) * i) + 1, seed) + 1) * 0.5f) * pianeggiantezza * pianeggiantezza * pianeggiantezza;
 		}
 
 	}

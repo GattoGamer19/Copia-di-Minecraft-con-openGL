@@ -30,6 +30,7 @@
 #include "Renderer.h"
 #include "Player.h"
 #include <iomanip>
+#include "Inventory.h"
 
 int main()
 {
@@ -40,7 +41,7 @@ int main()
 
 			int chunkX = j + (int)(currentChunk[0] - offset);
 			int chunkZ = i + (int)(currentChunk[1] - offset);
-			isCreated[chunkX][chunkZ];
+			isCreated[chunkX][chunkZ].store(false);
 		}
 	}
 
@@ -54,9 +55,11 @@ int main()
 	player1.position[0] = 0;
 	player1.position[1] = 0;
 
+
+
 	InputSettings(player);
 
-	chunkManager _chunkManager;
+	chunkManager _chunkManager = {};
 	_chunkManager.set();
 
 	mutex.lock();
@@ -81,15 +84,15 @@ int main()
 
 	GLfloat TriangleVertices1[] =
 	{
-		-0.6f,-0.2f ,  0.5f,		1.0f, 1.0f, 1.0f,	 0.0f, 0.333f, 4.0f,
-		-0.6f, 0.2f ,  0.5f,		1.0f, 1.0f, 1.0f,	 0.0f, 0.666f,4.0f,
-		 0.6f, -0.2f,  0.5f,		1.0f, 1.0f, 1.0f,		0.25f, 0.333f,4.0f,
-		 0.6f, 0.2f,   0.5f,		1.0f, 1.0f, 1.0f,		0.25f, 0.666f,4.0f,
+		-0.021f,-0.007f ,-0.99f,		1.0f, 1.0f, 1.0f,	 0.0f, 0.333f, 4.0f,
+		-0.021f, 0.007f ,-0.99f,		1.0f, 1.0f, 1.0f,	 0.0f, 0.666f,4.0f,
+		 0.021f,-0.007f, -0.99f,		1.0f, 1.0f, 1.0f,		0.25f, 0.333f,4.0f,
+		 0.021f, 0.007f, -0.99f,		1.0f, 1.0f, 1.0f,		0.25f, 0.666f,4.0f,
 
-		 -0.12f,-1.0f ,  -0.5f,		1.0f, 1.0f, 1.0f,		0.0f, 0.333f,4.0f,
-		-0.12f, 1.0f ,  -0.5f,		1.0f, 1.0f, 1.0f,		0.0f, 0.666f,4.0f,
-		 0.12f, -1.0f,  -0.5f,		1.0f, 1.0f, 1.0f,			0.25f, 0.333f,4.0f,
-		 0.12f, 1.0f,   -0.5f,		1.0f, 1.0f, 1.0f,			0.25f, 0.666f,4.0f
+		 -0.0042f,-0.035f, -0.99f,		1.0f, 1.0f, 1.0f,		0.0f, 0.333f,4.0f,
+		-0.0042f, 0.035f,  -0.99f,		1.0f, 1.0f, 1.0f,		0.0f, 0.666f,4.0f,
+		 0.0042f,-0.035f,  -0.99f,		1.0f, 1.0f, 1.0f,			0.25f, 0.333f,4.0f,
+		 0.0042f, 0.035f,  -0.99f,		1.0f, 1.0f, 1.0f,			0.25f, 0.666f,4.0f
 
 	};
 
@@ -133,36 +136,38 @@ int main()
 
 	uvCord uv;
 
+	float scale = 0.4f;
+
 	for (int i = 0; i < 216; i+=9)
 	{
-		handBlock[i] = uv.handBlock[i] + 13.15f;
-		handBlock[i+1] = uv.handBlock[i+1] + 3.55f;
-		handBlock[i+2] = uv.handBlock[i+2] + 2.9f;
+		handBlock[i] = uv.handBlock[i] * scale;
+		handBlock[i+1] = uv.handBlock[i+1] * scale;
+		handBlock[i+2] = uv.handBlock[i+2] * scale;
 		handBlock[i+3] = uv.handBlock[i+3];
 		handBlock[i+4] = uv.handBlock[i+4];
 		handBlock[i+5] = uv.handBlock[i+5];
 
 		handBlock[i + 6] = uv.handBlock[i + 6];
 		handBlock[i + 7] = uv.handBlock[i + 7];
-		handBlock[i+8] = 5.0f;
+		handBlock[i+8] = 6.0f;
 
 	}
 
 	glm::mat4x4 R = cam.R;
 	glm::mat4x4 R1 = cam.R1;
 
-	cam.proj(60.0f, 0.001f, larghezza, altezza, 10000.0f);
-	cam.rotate(0.0f, 1.0f, 0.0f, 15.0f);
-	cam.rotate(1.0f, 0.0f, 0.0f, -25.0f);
+	cam.proj(60.0f, 0.001f, larghezza, altezza, 10000000.0f);
+	cam.rotate(0.0f, 1.0f, 0.0f, 75.0f);
+	cam.rotate(1.0f, 0.0f, 0.0f, -5.0f);
 
 	for (int i = 0; i < 216; i += 9)
 	{
 		glm::vec4 R(handBlock[i], handBlock[i + 1], handBlock[i + 2], 1.0f);
-		R = cam.R * R;
+		R = cam.R * R * cam.pro;
 
-		handBlock[i] = R.x;
-		handBlock[i+1] = R.y;
-		handBlock[i+2] = R.z;
+		handBlock[i] = R.x + 1.6f;
+		handBlock[i+1] = R.y - 0.65f;
+		handBlock[i+2] = R.z - 1;
 
 		handBlock[i + 6] = uv.uvCords[(((i) / 9) * 2) + (48 * invBlock)];
 		handBlock[i + 7] = uv.uvCords[1 + (((i) / 9) * 2) + (48 * invBlock)];
@@ -175,6 +180,9 @@ int main()
 
 	VAO VAO1;
 	VAO1.Bind();
+
+	Inventory inv;
+
 
 	VBO vboCursor;
 	vboCursor.Gen(TriangleVertices1, sizeof(TriangleVertices1));
@@ -214,6 +222,8 @@ int main()
 
 
 	Texture grassTexture(ShaderProgram.ID, "terrain.png");
+	Texture hotbarTexture(ShaderProgram.ID, "hotbar.png");
+
 	grassTexture.Bind();
 
 	glEnable(GL_DEPTH_TEST);	
@@ -272,7 +282,7 @@ int main()
 			
 		}
 
-			controller.GetInvBlock();
+			controller.GetInvBlock(inv);
 
 			player.getLookingBlock(bufferChunkAssignedVBO);
 			player.blockInteraction(bufferChunkAssignedVBO);
@@ -346,6 +356,9 @@ int main()
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			
 
+			glDisable(GL_BLEND);
+
+
 			RenderObjects(VAO1, vboCursor, 0, eboCursor, 12);
 
 
@@ -394,12 +407,13 @@ int main()
 		
 
 			glClear(GL_DEPTH_BUFFER_BIT);
-
 			glDisable(GL_BLEND);
 
 			RenderObjects(VAO1, vboHandBlock, 0, eboHandBlock, 36);
 
-	
+			glEnable(GL_BLEND);
+
+			inv.renderLowInv(VAO1, hotbarTexture, grassTexture);
 
 			ShaderProgram.Activate();
 			VAO1.Bind();

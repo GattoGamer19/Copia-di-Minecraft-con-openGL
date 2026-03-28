@@ -166,6 +166,7 @@
     <ClCompile Include="highlight.cpp" />
     <ClCompile Include="InputSettings.cpp" />
     <ClCompile Include="InputSettings.h" />
+    <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Comandi.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="createChunks.h" />
     <ClInclude Include="EBO.h" />
     <ClInclude Include="highlight.h" />
+    <ClInclude Include="Inventory.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="shaderClass.h" />
@@ -204,6 +206,7 @@
     <Image Include="..\..\..\Downloads\grass_texture1.png" />
     <Image Include="..\..\..\Downloads\Texture.jpg" />
     <Image Include="..\..\..\Downloads\top_grass_block_texture.png" />
+    <Image Include="hotbar.png" />
     <Image Include="outline.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>

@@ -53,6 +53,7 @@ public:
 	std::vector<bool> shouldPreRender;
 	std::vector<bool> shouldCreate;
 	std::vector<bool> finishedChunks;
+	std::vector<bool> bufferFinishedChunks;
 
 	std::unordered_map<int, std::unordered_map<int, std::array<int,2>>> chunkAssignedVBO;
 	

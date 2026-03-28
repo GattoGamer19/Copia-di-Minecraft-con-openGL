@@ -17,9 +17,15 @@ void main()
 {
 
    FragColor = texture(tex0, Tex);
-   FragColor = vec4(FragColor.x + Color.x, FragColor.y + Color.y, FragColor.z + Color.z, 1.0f);
+   FragColor = vec4(FragColor.x + Color.x, FragColor.y + Color.y, FragColor.z + Color.z, FragColor.w);
 
-        if(dist > fogDistance && (Count > 6 || Count < 0))
+   if(Count != 4)
+   {
+     FragColor.w = 1.0f;
+   }
+
+
+        if(dist > fogDistance && (Count > 7 || Count < 0))
         { 
              float t = -(fogDistance - dist) / fogLength;
              FragColor = vec4(FragColor.x + (0.411f - FragColor.x) * t, FragColor.y + (0.827f - FragColor.y) * t, FragColor.z + (1 - FragColor.z) * t, 1.0f);

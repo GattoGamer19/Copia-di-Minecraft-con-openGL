@@ -34,7 +34,7 @@ private:
 	
 	int verticesSize = 0;
 
-	float shift = 0.0f;
+	float shift = 0.003f;
 
 public:
 

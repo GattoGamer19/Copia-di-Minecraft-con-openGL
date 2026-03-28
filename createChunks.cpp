@@ -25,6 +25,7 @@ void chunkManager::set()
 	shouldCreate.resize(nThreads);
 	shouldPreRender.resize(nThreads);
 	finishedChunks.resize(nThreads);
+	bufferFinishedChunks.resize(nThreads);
 
 	preRenderChunks.resize(nThreads);
 	_createChunks.resize(nThreads);
@@ -48,6 +49,7 @@ void chunkManager::set()
 		shouldCreate.at(j) = false;
 		shouldPreRender.at(j) = false;
 		finishedChunks.at(j) = false;
+		bufferFinishedChunks.at(j) = false;
 
 		threads.at(j) = std::thread(&chunkManager::chunkThreads, this, j);
 
@@ -236,9 +238,6 @@ void chunkManager::createChunks()
 
 							int i = floor(cx + dx);
 							int j = floor(cy + dy);
-
-							if (checkFreeVbo())
-							{
 							
 								//mutex.lock();
 								bool _isCreated = isCreated[(currentChunk1[0] - offset) + (int)i][(currentChunk1[1] - offset) + (int)j].load();
@@ -296,18 +295,10 @@ void chunkManager::createChunks()
 									else
 									{
 										stop = nThreads + 1;
-										startPoint = 0;
+										startPoint = radius;
 										std::cout << "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 									}
 								}
-
-							}
-							else
-							{
-
-								stop = nThreads + 1;
-								startPoint = radius;
-							}
 						}
 						
 					}
@@ -331,7 +322,7 @@ void chunkManager::createChunks()
 
 			for (i = 0; i < countChunks && !stop; i++)
 			{
-				if (finishedChunks[i])
+				if (bufferFinishedChunks[i])
 					genChunk1 = true;
 				else
 				{
@@ -346,8 +337,6 @@ void chunkManager::createChunks()
 			{
 				
 				player = bufferPlayer;
-
-
 			
 				//std::cout << "mario" << '\n';
 				//chunkAssignedVBO1 = chunkAssignedVBO;
@@ -355,6 +344,7 @@ void chunkManager::createChunks()
 
 				for (int i = 0; i < nThreads; i++)
 				{
+					bufferFinishedChunks[i] = false;
 					finishedChunks[i] = false;
 					updateChunkVBOCount++;
 
@@ -431,7 +421,7 @@ void chunkManager::getVisibleChunksRot(Player player)
 	float cosXrot = cos((xRotation - 90) / 57.295779513);
 	float sinXrot = sin((xRotation - 90) / 57.295779513);
 
-	float step = 1.12f;
+	float step = 1.82f;
 
 	for (float yRot = 0; yRot < 360; yRot += step)
 	{
@@ -592,7 +582,7 @@ void chunkManager::preRender()
 					int chunkZ = i + (int)(currentChunk1[1] - offset);
 
 					if(!isCreated[chunkX][chunkZ].load())
-					isCreated[chunkX][chunkZ] = false;
+					isCreated[chunkX][chunkZ].store(false);
 				}
 			}
 
@@ -616,8 +606,9 @@ void chunkManager::preRender()
 		}
 	}
 
-
-
+	mutex.lock();
+	bufferFinishedChunks = finishedChunks;
+	mutex.unlock();
 }
 
 void chunkManager::chunkThreads(int thread)

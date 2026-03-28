@@ -78,6 +78,9 @@
     <ClCompile Include="Player.cpp">
       <Filter>File di risorse</Filter>
     </ClCompile>
+    <ClCompile Include="Inventory.cpp">
+      <Filter>File di risorse</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shaderClass.h">
@@ -131,6 +134,9 @@
     <ClInclude Include="..\..\Users\gatto\Downloads\stb_easy_font.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="Inventory.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="default.vert">
@@ -166,6 +172,9 @@
       <Filter>File di origine\Textures</Filter>
     </Image>
     <Image Include="terrain1.png">
+      <Filter>File di origine\Textures</Filter>
+    </Image>
+    <Image Include="hotbar.png">
       <Filter>File di origine\Textures</Filter>
     </Image>
   </ItemGroup>
