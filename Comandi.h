@@ -16,8 +16,8 @@ class Comandi
 
 private:
 	
-	POINT P;
-	POINT P1;
+	POINT P = {};
+	POINT P1 = {};
 	bool firstTime = true;
 	float changeMouseX = 0;
 	float changeMouseY = 0;
@@ -26,7 +26,7 @@ private:
 	float projMin = 60;
 	float projMax = 65;
 
-	bool _onGround;
+	bool _onGround = false;
 
 	void MoveDir(int asse, float sens, Player& player, std::unordered_map<int, std::unordered_map<int, std::array<int, 2>>>& chunkAssignedVBO);
 

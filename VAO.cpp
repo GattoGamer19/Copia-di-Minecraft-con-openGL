@@ -21,7 +21,7 @@ void VAO::Delete()
 	glDeleteVertexArrays(1, &id);
 }
 
-void VAO::LinkVBO(VBO VBO, int nDati, GLuint layout, GLuint id, GLuint stride, int offset, GLuint varType)
+void VAO::LinkVBO(VBO& VBO, int nDati, GLuint layout, GLuint id, GLuint stride, int offset, GLuint varType)
 {
 	VBO.Bind(id);
     glVertexAttribPointer(layout, nDati, varType, GL_FALSE, stride * sizeof(float), (void*)(offset * sizeof(float)));
@@ -29,7 +29,7 @@ void VAO::LinkVBO(VBO VBO, int nDati, GLuint layout, GLuint id, GLuint stride, i
 	VBO.Unbind();
 }
 
-void VAO::LinkEBO(EBO EBO, GLuint layout)
+void VAO::LinkEBO(EBO& EBO, GLuint layout)
 {
 	EBO.Bind();
 	glVertexAttribPointer(layout, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);

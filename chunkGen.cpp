@@ -925,8 +925,8 @@ void Chunk::placeTree(std::vector<unsigned char>& posIsBlock, std::vector<Blocco
 	int count = 0;
 	int count1 = 0;
 
-	float tx = 10000.3f + (((_x - (offsetX / 2))) + (x * (sizeX - (offsetX))));
-	float tz = 10000.2f + (((_z - (offsetX / 2))) + (z * (sizeX - (offsetX))));
+	float tx = 10000.3f + ((((_x * scale) - (offsetX / 2))) + (x * ((sizeX * scale) - (offsetX))));
+	float tz = 10000.2f + ((((_z * scale) - (offsetX / 2))) + (z * ((sizeX * scale) - (offsetX))));
 
 	float treeHeightDelta = 5 + (perlin(tx, tz, seed) + 1) * 2;
 	float treeHeight = 4 + treeHeightDelta;
@@ -960,8 +960,8 @@ void Chunk::placeTree(std::vector<unsigned char>& posIsBlock, std::vector<Blocco
 
 				if (x1 >= 0 && x1 < sizeX && z1 >= 0 && z1 < sizeX && y1 < sizeY - 2)
 				{
-					float px = 10000.3f + (((x1 - (offsetX / 2))) + (x * (sizeX - (offsetX))));
-					float pz = 10000.2f + (((z1 - (offsetX / 2))) + (z * (sizeX - (offsetX))));
+					float px = 10000.3f + ((((x1 * scale) - (offsetX / 2))) + (x * ((sizeX * scale) - (offsetX))));
+					float pz = 10000.2f + ((((z1 * scale) - (offsetX / 2))) + (z * ((sizeX * scale) - (offsetX))));
 					float leaves = (perlin(px, pz, seed) + 1);
 
 					leaves /= centerDist / (2 / (treeHeightDelta / 2));
@@ -988,16 +988,16 @@ void Chunk::placeTree(std::vector<unsigned char>& posIsBlock, std::vector<Blocco
 
 }
 
-void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float>& allVertices, bool hasBeenModified)
+void Chunk::Create(int x1, int y1, VBO& vbo, EBO& ebo, std::vector<float>& allVertices, bool hasBeenModified, int offset)
 {
 	uvCord uv;
 	x = x1;
 	z = y1;
 
 
-	sizeX = size * (sizeX + offsetX) / scale;
-	sizeZ = size * (sizeZ + offsetX) / scale;
-	posIsBlock.resize(sizeX * sizeX * sizeY);
+	sizeX = (size * sizeX) + offsetX;
+	sizeZ = (size * sizeZ) + offsetX;
+	posIsBlock.resize(sizeX * scale * sizeX * scale * sizeY);
 
 	float amplifier = 1;
 	float multiplier = chunkSize / 16;
@@ -1005,10 +1005,10 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float>& a
 	x *= multiplier;
 	z *= multiplier;
 
-	float heights[5500];
-	float stoneHeights[5500];
-	float snowHeights[5500];
-	float verdos1[5500];
+	std::vector<float> heights(20000);
+	std::vector<float> stoneHeights(20000);
+	std::vector<float> snowHeights(20000);
+	std::vector<float> verdos1(20000);
 
 	float generalHeight = ((perlin((1000000.0f + x) / 20, (1000000.0f + z) / 20, seed) + 1) / 2) * 200;
 	float pianeggiantezza = -0.5f + ((perlin((100000.0f + (x / 3.0f)) / 5, (100000.0f + (z / 3.0f)) / 5, seed) + 1) / 2) * 3;
@@ -1021,10 +1021,10 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float>& a
 
 	//std::cout << "pianeggiantezza: " << pianeggiantezza << '\n';
 
-	for (int i = -(offsetX/2); i < (sizeX + (offsetX/2)); i++)
+	for (int i = -(offsetX/2); i < (sizeX - (offsetX/2)); i++)
 	{
 
-		for (int j = -(offsetX / 2); j < (sizeX + (offsetX / 2)); j++)
+		for (int j = -(offsetX / 2); j < (sizeX - (offsetX / 2)); j++)
 		{
 			generalHeight = ((perlin((cx + (cf * j)) / (5 * amplifier), (cz + (cf * i)) / (5 * amplifier), seed) + 1) / 2);
 			pianeggiantezza = -0.5f + ((perlin((((x + (cf * j)) / 4.5f)) / (5 * amplifier), (((z + (cf * i)) / 4.5f)) / (5 * amplifier), seed) + 1) / 2) * 3;
@@ -1049,9 +1049,15 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float>& a
 	z = y1;
 	x = x1;
 
+	sizeX /= scale;
+	sizeZ /= scale;
+
+	offsetX /= scale;
+	offsetZ /= scale;
+
 	{
 		
-
+		
 
 		int faceCount = 0;
 
@@ -1084,7 +1090,7 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float>& a
 						{
 
 						
-							if (((y1 > 10) && (y1 > (minHeight + snowHeights[x2 + z2 * sizeX])) && y1 < (minHeight + heights[x2 + z2 * sizeX])))
+							if (((y1 > 10) && (y1 > (minHeight + snowHeights[(x2 * scale) + (z2 *  scale * scale * sizeX)])) && y1 < (minHeight + heights[(x2 * scale) + (z2 *  scale * scale * sizeX)])))
 							{
 
 								blocco0[jk].id = snow;
@@ -1092,7 +1098,7 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float>& a
 
 							}
 
-							else if (y1 < minHeight || ((y1 > 10) && (y1 > (minHeight + stoneHeights[x2 + z2 * sizeX])) && y1 < (minHeight + heights[x2 + z2 * sizeX])))
+							else if (y1 < minHeight || ((y1 > 10) && (y1 > (minHeight + stoneHeights[(x2 * scale) + (z2 *  scale * scale * sizeX)])) && y1 < (minHeight + heights[(x2 * scale) + (z2 *  scale * scale * sizeX)])))
 							{
 
 								blocco0[jk].id = stone;
@@ -1101,19 +1107,19 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float>& a
 							}
 
 
-							else if (y1 - minHeight <= heights[x2 + z2 * sizeX] && heights[x2 + z2 * sizeX] + minHeight < sizeY - 1)
+							else if (y1 - minHeight <= heights[(x2 * scale) + (z2 *  scale * scale * sizeX)] && heights[(x2 * scale) + (z2 *  scale * scale * sizeX)] + minHeight < sizeY - 1)
 							{
 
 								blocco0[jk].id = dirtGrass;
 								posIsBlock[jk] = dirtGrass;
 
-								if (heights[x2 + z2 * sizeX] - (y1 - minHeight) > 4)
+								if (heights[(x2 * scale) + (z2 *  scale * scale * sizeX)] - (y1 - minHeight) > 4)
 								{
 									blocco0[jk].id = stone;
 									posIsBlock[jk] = stone;
 								}
 
-								else if (heights[x2 + z2 * sizeX] - (y1 - minHeight) > 1)
+								else if (heights[(x2 * scale) + (z2 *  scale * scale * sizeX)] - (y1 - minHeight) > 1)
 								{
 
 									blocco0[jk].id = dirt;
@@ -1147,8 +1153,8 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float>& a
 								blocco0[jk].id = air;
 								posIsBlock[jk] = air;
 							}
-						}
 
+						}
 
 					}
 				}
@@ -1164,9 +1170,9 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float>& a
 						//verdos = -0.5f + ((perlin((200000.0f + (x / 3.0f)) / 5, (200000.0f + (z / 3.0f)) / 5) + 1) / 2) * 3;
 
 						jk = x2 + (sizeZ * z2) + (sizeX * sizeZ * y1);
-						if (y1 - minHeight == (int)heights[x2 + z2 * sizeX] && heights[x2 + z2 * sizeX] + minHeight < sizeY - 1)
+						if (y1 - minHeight == (int)heights[(x2 * scale) + (z2 *  scale * scale * sizeX)] && heights[(x2 * scale) + (z2 *  scale * scale * sizeX)] + minHeight < sizeY - 1)
 						{
-							if ((verdos1[x2 + z2 * sizeX] > 1.05f) && (y1 > minHeight + 10))
+							if ((verdos1[(x2 * scale) + (z2 *  scale * scale * sizeX)] > 1.05f) && (y1 > minHeight + 10))
 							{
 								if(posIsBlock[x2 + (z2 * sizeX) + (y1 * sizeX * sizeX)] == dirtGrass)
 								placeTree(posIsBlock, blocco0, x2, z2, y1 + 1);
@@ -1187,6 +1193,8 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float>& a
 				sizeZ -= offsetX;
 				offsetX = 0;
 
+
+
 				std::vector<Blocco> blocco0(sizeX * sizeY * sizeZ);
 
 				for (int y1 = 0; y1 < sizeY - 2; y1++)
@@ -1196,9 +1204,31 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float>& a
 						for (int x2 = 0; x2 < sizeX; x2++)
 						{
 							float index = x2 + (sizeZ * z2) + (sizeX * sizeZ * y1);
-							blocco0[index].id = posIsBlock[index];
+							float index1 = (x2 * scale) + (sizeZ * scale * z2 * scale) + (sizeX * scale * sizeZ * scale * y1);
+							blocco0[index].id = posIsBlock[index1];
 						}
 					}
+				}
+
+				if (scale != 1)
+				{
+					std::vector<unsigned char> _posIsBlock(sizeX* sizeZ* sizeY);
+
+					for (int y1 = 0; y1 < sizeY - 2; y1++)
+					{
+						for (int z2 = 0; z2 < sizeZ; z2++)
+						{
+							for (int x2 = 0; x2 < sizeX; x2++)
+							{
+								float index = x2 + (sizeZ * z2) + (sizeX * sizeZ * y1);
+								float index1 = (x2 * scale) + (sizeZ * scale * z2 * scale) + (sizeX * scale * sizeZ * scale * y1);
+								_posIsBlock[index] = posIsBlock[index1];
+							}
+						}
+					}
+
+					posIsBlock = _posIsBlock;
+
 				}
 
 				blocco.resize(sizeX* sizeY* sizeZ);
@@ -1308,10 +1338,11 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float>& a
 		}
 
 
+
 		int count1 = 0;
 		int allOff = 0;
 		int count2 = 0;
-		for (int i = 0; i < sizeY; i++)
+		for (int i = sizeY - 1; i >= 0; i--)
 		{
 			for (int j = (offsetX/2); j < sizeX - (offsetX / 2); j++)
 			{
@@ -1319,14 +1350,43 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float>& a
 				{
 					count2 = k + (j * sizeX) + (i * sizeX * sizeZ);
 
+					if (blocco[count2].renderFlags & (1 << 4) && scale > 1)
+					{
+						if (k == offsetX / 2)
+						{
+							blocco[count2].renderFlags |= (1 << 2);
+							if (i >= 1)
+							{
+								blocco[count2 - (sizeX * sizeZ)].renderFlags |= (1 << 2);
+							}
+						}
+							
+						if (k == sizeX - (offsetX / 2))
+						{
+							blocco[count2 - (sizeX * sizeZ)].renderFlags |= (1 << 3);
+						}
+							
+						if (j == (offsetX / 2))
+						{
+							blocco[count2 - (sizeX * sizeZ)].renderFlags |= (1 << 0);
+						}
+
+						if (j == sizeX - (offsetX / 2))
+						{
+							blocco[count2 - (sizeX * sizeZ)].renderFlags |= (1 << 1);
+						}
+							
+					}
+
 					if (blocco[count2].renderFlags & (1 << 0))
 					{
 						for (int m = 0; m < 36; m += 9)
 						{
-
+							
+								
 
 							allVertices[allOff] = (scale * TriangleVertices[m]) + ((sizeX - offsetX) * (x * scale)) + ((k - (offsetX / 2)) * scale);
-							allVertices[allOff + 1] = (TriangleVertices[m + 1]) + i;
+							allVertices[allOff + 1] = (TriangleVertices[m + 1]) + (i);
 							allVertices[allOff + 2] = (scale * TriangleVertices[m + 2]) + ((sizeX - offsetX) * (z * scale)) + (scale * (j - (offsetX / 2)));
 							allVertices[allOff + 3] = TriangleVertices[m + 3];
 							allVertices[allOff + 4] = TriangleVertices[m + 4];
@@ -1335,7 +1395,12 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float>& a
 							allVertices[allOff + 7] = uv.uvCords[1 + (((m) / 9) * 2) + (48 * blocco[count2].id)];
 							allVertices[allOff + 8] = 45987;
 
-
+							if (scale > 1)
+							{
+								allVertices[allOff] += 1.5f;
+								allVertices[allOff + 1] -= (scale);
+								allVertices[allOff + 2] += 1.5f;
+							}
 
 							allOff += 9;
 
@@ -1360,7 +1425,7 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float>& a
 
 
 							allVertices[allOff] = (scale * TriangleVertices[m]) + ((sizeX - offsetX) * (x * scale)) + ((k - (offsetX / 2)) * scale);
-							allVertices[allOff + 1] = (TriangleVertices[m + 1]) + i;
+							allVertices[allOff + 1] = (TriangleVertices[m + 1]) + (i);
 							allVertices[allOff + 2] = (scale * TriangleVertices[m + 2]) + ((sizeX - offsetX) * (z * scale)) + (scale * (j - (offsetX / 2)));
 							allVertices[allOff + 3] = TriangleVertices[m + 3];
 							allVertices[allOff + 4] = TriangleVertices[m + 4];
@@ -1369,8 +1434,12 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float>& a
 							allVertices[allOff + 7] = uv.uvCords[1 + (((m) / 9) * 2) + (48 * blocco[count2].id)];
 							allVertices[allOff + 8] = 45987;
 
-
-
+							if (scale > 1)
+							{
+								allVertices[allOff] += 1.5f;
+								allVertices[allOff + 1] -= (scale);
+								allVertices[allOff + 2] += 1.5f;
+							}
 
 							allOff += 9;
 
@@ -1393,7 +1462,7 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float>& a
 						{
 
 							allVertices[allOff] = (scale * TriangleVertices[m]) + ((sizeX - offsetX) * (x * scale)) + ((k - (offsetX / 2)) * scale);
-							allVertices[allOff + 1] = (TriangleVertices[m + 1]) + i;
+							allVertices[allOff + 1] = (TriangleVertices[m + 1]) + (i);
 							allVertices[allOff + 2] = (scale * TriangleVertices[m + 2]) + ((sizeX - offsetX) * (z * scale)) + (scale * (j - (offsetX / 2)));
 							allVertices[allOff + 3] = TriangleVertices[m + 3];
 							allVertices[allOff + 4] = TriangleVertices[m + 4];
@@ -1402,7 +1471,12 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float>& a
 							allVertices[allOff + 7] = uv.uvCords[1 + (((m) / 9) * 2) + (48 * blocco[count2].id)];
 							allVertices[allOff + 8] = 45987;
 
-
+							if (scale > 1)
+							{
+								allVertices[allOff] += 1.5f;
+								allVertices[allOff + 1] -= (scale);
+								allVertices[allOff + 2] += 1.5f;
+							}
 
 							allOff += 9;
 
@@ -1424,9 +1498,8 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float>& a
 						for (int m = 36 * 3; m < 36 * 4; m += 9)
 						{
 
-
 							allVertices[allOff] = (scale * TriangleVertices[m]) + ((sizeX - offsetX) * (x * scale)) + ((k - (offsetX / 2)) * scale);
-							allVertices[allOff + 1] = (TriangleVertices[m + 1]) + i;
+							allVertices[allOff + 1] = (TriangleVertices[m + 1]) + (i);
 							allVertices[allOff + 2] = (scale * TriangleVertices[m + 2]) + ((sizeX - offsetX) * (z * scale)) + (scale * (j - (offsetX / 2)));
 							allVertices[allOff + 3] = TriangleVertices[m + 3];
 							allVertices[allOff + 4] = TriangleVertices[m + 4];
@@ -1435,8 +1508,12 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float>& a
 							allVertices[allOff + 7] = uv.uvCords[1 + (((m) / 9) * 2) + (48 * blocco[count2].id)];
 							allVertices[allOff + 8] = 45987;
 
-
-
+							if (scale > 1)
+							{
+								allVertices[allOff] += 1.5f;
+								allVertices[allOff + 1] -= (scale);
+								allVertices[allOff + 2] += 1.5f;
+							}
 
 							allOff += 9;
 
@@ -1460,7 +1537,7 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float>& a
 						{
 
 							allVertices[allOff] = (scale * TriangleVertices[m]) + ((sizeX - offsetX) * (x * scale)) + ((k - (offsetX / 2)) * scale);
-							allVertices[allOff + 1] = (TriangleVertices[m + 1]) + i;
+							allVertices[allOff + 1] = (TriangleVertices[m + 1]) + (i);
 							allVertices[allOff + 2] = (scale * TriangleVertices[m + 2]) + ((sizeX - offsetX) * (z * scale)) + (scale * (j - (offsetX / 2)));
 							allVertices[allOff + 3] = TriangleVertices[m + 3];
 							allVertices[allOff + 4] = TriangleVertices[m + 4];
@@ -1468,6 +1545,13 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float>& a
 							allVertices[allOff + 6] = uv.uvCords[(((m) / 9) * 2) + (48 * blocco[count2].id)];
 							allVertices[allOff + 7] = uv.uvCords[1 + (((m) / 9) * 2) + (48 * blocco[count2].id)];
 							allVertices[allOff + 8] = 45987;
+
+							if (scale > 1)
+							{
+								allVertices[allOff] += 1.5f;
+								allVertices[allOff + 1] -= (scale);
+								allVertices[allOff + 2] += 1.5f;
+							}
 
 							allOff += 9;
 
@@ -1490,7 +1574,7 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float>& a
 						{
 
 							allVertices[allOff] = (scale * TriangleVertices[m]) + ((sizeX - offsetX) * (x * scale)) + ((k - (offsetX / 2)) * scale);
-							allVertices[allOff + 1] = (TriangleVertices[m + 1]) + i;
+							allVertices[allOff + 1] = (TriangleVertices[m + 1]) + (i);
 							allVertices[allOff + 2] = (scale * TriangleVertices[m + 2]) + ((sizeX - offsetX) * (z * scale)) + (scale * (j - (offsetX / 2)));
 							allVertices[allOff + 3] = TriangleVertices[m + 3];
 							allVertices[allOff + 4] = TriangleVertices[m + 4];
@@ -1499,7 +1583,12 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float>& a
 							allVertices[allOff + 7] = uv.uvCords[1 + (((m) / 9) * 2) + (48 * blocco[count2].id)];
 							allVertices[allOff + 8] = 45987;
 
-
+							if (scale > 1)
+							{
+								allVertices[allOff] += 1.5f;
+								allVertices[allOff + 1] -= (scale);
+								allVertices[allOff + 2] += 1.5f;
+							}
 
 							allOff += 9;
 						}
@@ -1549,56 +1638,83 @@ void Chunk::Create(int x1, int y1, GLuint vbo, GLuint ebo, std::vector<float>& a
 	sizeX = chunkSize;
 	sizeZ = chunkSize;
 
+	offsetX *= scale;
+	offsetZ *= scale;
 
-
-	std::vector<unsigned char> posIsBlock1(sizeX* sizeX* sizeY);
-	std::vector<Blocco> blocco1(sizeX * sizeX * sizeY);
-
-	for (int i = 0; i < sizeY; i++)
+	if (scale == 1)
 	{
-		for (int j = 0; j < sizeX; j++)
-		{
-			for (int k = 0; k < sizeX; k++)
-			{
-				int index1 = k + (j * sizeX) + (i * sizeX * sizeX);
-				int index = (k + (offsetX/2)) + ((j + (offsetX / 2)) * (sizeX + offsetX)) + (i * (sizeX + offsetX) * (sizeX + offsetX));
 
-				blocco1[index1] = blocco[index];
-				posIsBlock1[index1] = posIsBlock[index];
+		std::vector<unsigned char> posIsBlock1(sizeX * sizeX * sizeY);
+		std::vector<Blocco> blocco1(sizeX * sizeX * sizeY);
+
+		for (int i = 0; i < sizeY; i++)
+		{
+			for (int j = 0; j < sizeX; j++)
+			{
+				for (int k = 0; k < sizeX; k++)
+				{
+					int index1 = k + (j * sizeX) + (i * sizeX * sizeX);
+					int index = (k + (offsetX / 2)) + ((j + (offsetX / 2)) * (sizeX + offsetX)) + (i * (sizeX + offsetX) * (sizeX + offsetX));
+
+					blocco1[index1] = blocco[index];
+					posIsBlock1[index1] = posIsBlock[index];
+				}
 			}
 		}
+
+		offsetX = offsetZ;
+
+		//posIsBlock = std::vector<unsigned char>();
+		posIsBlock.resize(sizeX * sizeY * sizeZ);
+		blocco = std::vector<Blocco>();
+		blocco.resize(sizeX * sizeY * sizeZ);
+
+		posIsBlock = posIsBlock1;
+		blocco = blocco1;
 	}
 
-	offsetX = offsetZ;
+	if (scale != 1)
+	{
+		posIsBlock = std::vector<unsigned char>();
+		blocco = std::vector<Blocco>();
 
-	//posIsBlock = std::vector<unsigned char>();
-	posIsBlock.resize(sizeX* sizeY* sizeZ);
-	blocco = std::vector<Blocco>();
-	blocco.resize(sizeX* sizeY* sizeZ);
+	}
+	
+	mutexVBO.lock();
+	vbo.allVertices[offset].resize(verticesSize);
+	
+	mutexVBO.unlock();
 
-	posIsBlock = posIsBlock1;
-	blocco = blocco1;
+	for (int i = 0; i < verticesSize; i++)
+	{
+		vbo.allVertices[offset][i] = allVertices[i];
+	}
 
+
+	vbo.verticesInizialized = true;
+
+	offsetC = offset;
 
 	created = true;
-	std::cout << allVertices.size() << '\n';
+	std::cout << "chunkCreated" << '\n';
 }
 
 
-void Chunk::preRender(GLuint vbo, std::vector<float>& allVertices, GLuint ebo)
+void Chunk::preRender(GLuint vbo, std::vector<float>& allVertices, EBO& ebo, int _verticesSize)
 {
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, (verticesSize) * sizeof(float), allVertices.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, _verticesSize, allVertices.data(), GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices0.size() * sizeof(GLuint), indices0.data(), GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo.id);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, ebo.indices[8].size() * sizeof(GLuint), ebo.indices[8].data(), GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	
 
 	//allVertices.resize(216 * chunkSize * chunkSize * sizeY);
 
-	indexNumbers = indices0.size();
-	indexNumber = indices0.size();
+	indexNumbers = ebo.indices[8].size();
+	indexNumber = ebo.indices[8].size();
 
 	//indices0 = std::vector<GLuint>();
 
@@ -1998,7 +2114,7 @@ void Chunk::Update(int x1, int z1, int y1, bool build, GLuint ebo1, GLuint vbo1,
 
 		indexNumbers = indices0.size();
 		indexNumber = indices0.size();
-		allVertices.resize(216 * chunkSize * chunkSize * sizeY);
+		//allVertices.resize(216 * chunkSize * chunkSize * sizeY / 10);
 	}
 
 	else if (!build && i >= 0)
@@ -2416,7 +2532,7 @@ void Chunk::Update(int x1, int z1, int y1, bool build, GLuint ebo1, GLuint vbo1,
 
 		indexNumbers = indices0.size();
 		indexNumber = indices0.size();
-		allVertices.resize(216 * chunkSize * chunkSize * sizeY);
+		//allVertices.resize(216 * chunkSize * chunkSize * sizeY / 10);
 	}
 
 	chunkBlocks[x][z] = posIsBlock;

@@ -45,9 +45,12 @@ void Player::getLookingBlock(std::unordered_map<int, std::unordered_map<int, std
 
 
 		count++;
+		
+		int index = (int)((roundf(rayPoint.y) * chunkSize * chunkSize) + (chunkPosition[0]) + (chunkPosition[1] * chunkSize));
 
 		if(chunk[cx][cz].created)
-		if (chunk[cx][cz].posIsBlock[(int)((roundf(rayPoint.y) * chunkSize * chunkSize) + (chunkPosition[0]) + (chunkPosition[1] * chunkSize))])
+		if(index >= 0 && index < chunkSize * chunkSize * sizeY)
+		if (chunk[cx][cz].posIsBlock[index])
 		{
 			rayPoint -= (cam.forwardRay * 0.05f);
 			while (run)
@@ -68,11 +71,13 @@ void Player::getLookingBlock(std::unordered_map<int, std::unordered_map<int, std
 				chunkPosition[1] = roundf(rayPoint.z - currentChunk[1] * chunkSize);
 
 
-				int cx = chunkAssignedVBO[currentChunk[0]][currentChunk[1]][0];
-				int cz = chunkAssignedVBO[currentChunk[0]][currentChunk[1]][1];
+				cx = chunkAssignedVBO[currentChunk[0]][currentChunk[1]][0];
+				cz = chunkAssignedVBO[currentChunk[0]][currentChunk[1]][1];
 
+				index = (int)((roundf(rayPoint.y) * chunkSize * chunkSize) + (chunkPosition[0]) + (chunkPosition[1] * chunkSize));
 
 				if (chunk[cx][cz].created)
+				if (index >= 0 && index < chunkSize * chunkSize * sizeY)
 				if (chunk[cx][cz].posIsBlock[(int)((roundf(rayPoint.y) * chunkSize * chunkSize) + (chunkPosition[0]) + (chunkPosition[1] * chunkSize))])
 				{
 					rayPoint -= (cam.forwardRay * 0.005f);
@@ -92,11 +97,13 @@ void Player::getLookingBlock(std::unordered_map<int, std::unordered_map<int, std
 						chunkPosition[1] = roundf(rayPoint.z - currentChunk[1] * chunkSize);
 
 
-						int cx = chunkAssignedVBO[currentChunk[0]][currentChunk[1]][0];
-						int cz = chunkAssignedVBO[currentChunk[0]][currentChunk[1]][1];
+						cx = chunkAssignedVBO[currentChunk[0]][currentChunk[1]][0];
+						cz = chunkAssignedVBO[currentChunk[0]][currentChunk[1]][1];
 
-						
+						index = (int)((roundf(rayPoint.y) * chunkSize * chunkSize) + (chunkPosition[0]) + (chunkPosition[1] * chunkSize));
+
 						if (chunk[cx][cz].created)
+						if (index >= 0 && index < chunkSize * chunkSize * sizeY)
 						if (chunk[cx][cz].posIsBlock[(int)((roundf(rayPoint.y) * chunkSize * chunkSize) + (chunkPosition[0]) + (chunkPosition[1] * chunkSize))])
 						{
 							selectedBlockPosition[0] = chunkPosition[0];

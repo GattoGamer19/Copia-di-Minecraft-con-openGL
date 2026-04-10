@@ -76,7 +76,9 @@ public:
 	long long seed = 3284157443;
 
 	int size = 1;
-	int scale = 1;
+	float scale = 1;
+
+	int offsetC = 0;
 
 	bool created = false;
 	bool ready = false;
@@ -97,8 +99,8 @@ public:
 	Chunk() = default;
 	int getBlock(int x, int z, int y);
 	void placeTree(std::vector<unsigned char>& posIsBlock, std::vector<Blocco>& blocco, int x, int z, int y);
-	void Create(int x, int y, GLuint vbo, GLuint ebo, std::vector<float>& allVertices, bool hasBeenModified);
-	void preRender(GLuint vbo, std::vector<float>& allVertices, GLuint ebo);
+	void Create(int x, int y, VBO& vbo, EBO& ebo, std::vector<float>& allVertices, bool hasBeenModified, int offset);
+	void preRender(GLuint vbo, std::vector<float>& allVertices, EBO& ebo, int _verticesSize);
 	void Update(int x, int z, int y, bool build, GLuint ebo, GLuint vbo, std::vector<float>& allVertices, int id, std::unordered_map<int, std::unordered_map<int, std::array<int, 2>>>& chunkAssignedVBO);
 	void highLight(int x, int z, int y, GLuint vbo);
 	void Render(VAO vao, VBO vbo, EBO ebo);

@@ -5,10 +5,14 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+inline float worldScale = 50;
+
 class camera
 {
 	
 public:
+
+
 
 	glm::vec3 forward = glm::dvec3(0.0f, 0.0f, -0.01f);
 	glm::vec3 forwardRay = glm::dvec3(0.0f, 0.0f, -0.01f);
@@ -23,6 +27,7 @@ public:
 	glm::mat4 R = glm::mat4(1.0f);
 	glm::mat4 R1 = glm::mat4(1.0f);
 	glm::mat4 view = glm::mat4(1.0f);
+	glm::mat4 defaultView = glm::mat4(1.0f);
 	glm::mat4 pro = glm::mat4(1.0f);
 
 	void rotate(float x, float y, float z, float angolo);

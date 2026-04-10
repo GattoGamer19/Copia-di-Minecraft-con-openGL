@@ -7,8 +7,7 @@ void InputSettings(Player& player) {
 	std::cout << "Render Distance: " << std::endl;
 	std::cin >> nChunkX;
 
-	if (nChunkX % 2 == 0)
-		nChunkX++;
+
 
 	rChunkX = nChunkX;
 	nChunkZ = nChunkX;
@@ -40,11 +39,17 @@ void InputSettings(Player& player) {
 		isVisible[i].resize(nChunkX);
 	}
 
+	GLuint vuoto[2] = { 0,0 };
+	GLfloat vuoto1[2] = { 0,0 };
+
 	for (int i = 0; i < nChunkX; i++)
 	{
 		for (int j = 0; j < nChunkX; j++)
 		{
 			chunk[i][j] = {};
+			ebo[i][j] = {};
+			vbo[i][j] = {};
+
 		}
 	}
 

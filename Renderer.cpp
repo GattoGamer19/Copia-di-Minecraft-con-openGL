@@ -4,7 +4,7 @@
 #include "Renderer.h"
 #include <glad/glad.h>
 
-void RenderObjects(VAO vao, VBO vbo, int vboIND, EBO ebo, int indexNumbers)
+void RenderObjects(VAO& vao, VBO& vbo, int vboIND, EBO& ebo, int indexNumbers)
 {
 	ebo.Bind();
 	vao.LinkVBO(vbo, 3, 0, vbo.ids[vboIND], 9, 0, GL_FLOAT);
@@ -15,7 +15,7 @@ void RenderObjects(VAO vao, VBO vbo, int vboIND, EBO ebo, int indexNumbers)
 	ebo.Unbind();
 }
 
-void RenderLines(VAO vao, VBO vbo, int vboIND, EBO ebo, int indexNumbers)
+void RenderLines(VAO& vao, VBO& vbo, int vboIND, EBO& ebo, int indexNumbers)
 {
 	ebo.Bind();
 	vao.LinkVBO(vbo, 3, 0, vbo.ids[vboIND], 9, 0, GL_FLOAT);

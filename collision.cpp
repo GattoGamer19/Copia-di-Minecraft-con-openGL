@@ -75,6 +75,7 @@ bool checkBlock(Player player, std::unordered_map<int, std::unordered_map<int, s
 				int indexFront = (int)((roundf(player.position[2] - 0.75f) * chunkSize * chunkSize) + (int)roundf(chunkPosition[0]) + ((int)roundf(chunkPosition[1]) * chunkSize));
 				int indexUp = (int)((roundf(player.position[2] + 0.25f) * chunkSize * chunkSize) + (int)roundf(chunkPosition[0]) + ((int)roundf(chunkPosition[1]) * chunkSize));
 
+				if(indexDown >= 0 && indexDown <= chunkSize * chunkSize * sizeY)
 				if (chunk[cX][cZ].created)
 					if (chunk[cX][cZ].posIsBlock[indexDown] > 0 && chunk[cX][cZ].posIsBlock[indexDown] != water)
 					{
@@ -82,6 +83,7 @@ bool checkBlock(Player player, std::unordered_map<int, std::unordered_map<int, s
 						return true;
 					}
 
+				if (indexFront >= 0 && indexFront <= chunkSize * chunkSize * sizeY)
 				if (chunk[cX][cZ].created)
 					if (chunk[cX][cZ].posIsBlock[indexFront] > 0 && chunk[cX][cZ].posIsBlock[indexFront] != water)
 					{
@@ -89,6 +91,7 @@ bool checkBlock(Player player, std::unordered_map<int, std::unordered_map<int, s
 						return true;
 					}
 
+				if (indexUp >= 0 && indexUp <= chunkSize * chunkSize * sizeY)
 				if (chunk[cX][cZ].created)
 					if (chunk[cX][cZ].posIsBlock[indexUp] > 0 && chunk[cX][cZ].posIsBlock[indexUp] != water)
 					{

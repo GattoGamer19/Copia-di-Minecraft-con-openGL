@@ -18,6 +18,8 @@ uniform float offsetX;
 uniform float offsetY;
 uniform float offsetZ;
 
+uniform float worldScale;
+
 float xU = 16.0f / 256.0f;
 float yU = 16.0f / 256.0f;
 
@@ -27,10 +29,10 @@ void main()
  float y = aPos.y - 150;
  
 
- vec4 aPos1 = view * vec4(offsetX + aPos.x * 0.01f, y * 0.01f,offsetZ + aPos.z * 0.01f, 1.0f);
+ vec4 aPos1 = view * vec4(offsetX + aPos.x / worldScale, offsetY + aPos.y / worldScale,offsetZ + aPos.z / worldScale, 1.0f);
 
 
-   gl_Position = proj * R * view * vec4(offsetX + aPos.x * 0.01f, y * 0.01f,offsetZ + aPos.z * 0.01f, 1.0f);
+   gl_Position = proj * R * view * vec4(offsetX + aPos.x / worldScale,  offsetY + aPos.y / worldScale,offsetZ + aPos.z / worldScale, 1.0f);
 
    Color = aColor;
    Tex = aTex;

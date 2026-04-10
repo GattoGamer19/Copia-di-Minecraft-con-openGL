@@ -69,12 +69,11 @@ void Comandi::Move(Player& player, float speed, std::unordered_map<int, std::uno
 
 	if ((GetAsyncKeyState('R') & 0x8000) && (GetAsyncKeyState(VK_LCONTROL) & 0x8000))
 	{
-		cam.forward1.x = cam.forward.x + cam.forward.x * 40.2f;
-		cam.forward1.z = cam.forward.z + cam.forward.z * 40.2f;
-		//cam.forward1.y = cam.forward.y + cam.forward.y * 20.2f;
+		cam.forward1.x = cam.forward.x + cam.forward.x * 20.2f;
+		cam.forward1.z = cam.forward.z + cam.forward.z * 20.2f;
+		cam.forward1.y = cam.forward.y + cam.forward.y * 20.2f;
 
-
-		if (proj < projMax)
+				if (proj < projMax)
 			proj += 0.03f * frameTime;
 	}
 

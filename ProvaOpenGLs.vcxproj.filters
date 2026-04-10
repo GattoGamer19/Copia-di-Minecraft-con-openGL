@@ -137,6 +137,12 @@
     <ClInclude Include="Inventory.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="resource1.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="default.vert">
@@ -177,10 +183,21 @@
     <Image Include="hotbar.png">
       <Filter>File di origine\Textures</Filter>
     </Image>
+    <Image Include="..\..\Users\gatto\Downloads\minecraft-desktop-icon-download-15.ico">
+      <Filter>File di origine\Textures</Filter>
+    </Image>
+    <Image Include="..\..\Users\gatto\Downloads\minecraft-desktop-icon-download-15.jpg">
+      <Filter>File di risorse</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Media Include="..\..\..\Downloads\stone.wav">
       <Filter>File di risorse</Filter>
     </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="icona.rc">
+      <Filter>File di risorse</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

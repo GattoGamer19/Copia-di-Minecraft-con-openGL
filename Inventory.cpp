@@ -35,7 +35,7 @@ Inventory::Inventory()
 	glm::mat4x4 R = cam.R;
 	glm::mat4x4 R1 = cam.R1;
 
-	cam.proj(60.0f, 0.001f, larghezza, altezza, 10000000.0f);
+	cam.proj(60.0f, 0.1f, larghezza, altezza, 1000.0f);
 	cam.rotate(-1.0f, 1.0f, 0.5f, 305.0f);
 	//cam.rotate(1.0f, 0.0f, 0.0f, 45.0f);
 

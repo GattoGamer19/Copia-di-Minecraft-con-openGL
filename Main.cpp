@@ -45,7 +45,7 @@ int main()
 		}
 	}
 
-	Comandi controller;
+	Comandi controller = {};
 
 	Player player;
 	Player player1;
@@ -55,12 +55,12 @@ int main()
 	player1.position[0] = 0;
 	player1.position[1] = 0;
 
-
-
 	InputSettings(player);
 
 	chunkManager _chunkManager = {};
 	_chunkManager.set();
+
+
 
 	mutex.lock();
 	glfwInit();
@@ -68,6 +68,8 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+	glfwWindowHint(GLFW_SAMPLES, 4);
 
 
 
@@ -77,6 +79,8 @@ int main()
 	glfwMakeContextCurrent(window);
 
 	gladLoadGL();
+
+	glfwWindowHint(GLFW_DEPTH_BITS, 32);
 
 	glViewport(0, 0, larghezza, altezza);
 
@@ -156,7 +160,7 @@ int main()
 	glm::mat4x4 R = cam.R;
 	glm::mat4x4 R1 = cam.R1;
 
-	cam.proj(60.0f, 0.001f, larghezza, altezza, 10000000.0f);
+	cam.proj(60.0f, 0.1f, larghezza, altezza, 1000.0f);
 	cam.rotate(0.0f, 1.0f, 0.0f, 75.0f);
 	cam.rotate(1.0f, 0.0f, 0.0f, -5.0f);
 
@@ -228,6 +232,7 @@ int main()
 
 	glEnable(GL_DEPTH_TEST);	
 
+	glEnable(GL_MULTISAMPLE);
 
 	ShaderProgram.Activate();
 
@@ -237,20 +242,32 @@ int main()
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+	
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
+	GLuint _worldScale = glGetUniformLocation(ShaderProgram.ID, "worldScale");
+	glUniform1f(_worldScale, worldScale);
+
 	GLuint fogDistance = glGetUniformLocation(ShaderProgram.ID, "fogDistance");
-	glUniform1f(fogDistance, ((offset - ((offset / 15))) * chunkSize) / 100);
+	glUniform1f(fogDistance, ((offset - ((offset / 15))) * chunkSize) / worldScale);
+
+	GLuint fogDistance1 = glGetUniformLocation(ShaderProgram.ID, "fogDistance1");
+	glUniform1f(fogDistance1, ((offset - ((offset / 2)))* chunkSize) / worldScale);
 	
+	GLuint fogLength1 = glGetUniformLocation(ShaderProgram.ID, "fogLength1");
+	glUniform1f(fogLength1, (offset * 1.0f * chunkSize) / worldScale);
+
 	GLuint fogLength = glGetUniformLocation(ShaderProgram.ID, "fogLength");
-	glUniform1f(fogLength, (offset * 1.0f) / 100);
+	glUniform1f(fogLength, (offset * 1.0f) / worldScale);
 
 	GLuint offsetX = glGetUniformLocation(ShaderProgram.ID, "offsetX");
-	glUniform1f(offsetX, -player.position[0] / 100);
+	glUniform1f(offsetX, -player.position[0] / worldScale);
+
+	GLuint offsetY = glGetUniformLocation(ShaderProgram.ID, "offsetY");
+	glUniform1f(offsetY, -player.position[2] / worldScale);
 
 	GLuint offsetZ = glGetUniformLocation(ShaderProgram.ID, "offsetZ");
-	glUniform1f(offsetZ, -player.position[1] / 100);
+	glUniform1f(offsetZ, -player.position[1] / worldScale);
 
 	_chunkManager.getVisibleChunksRot(player);
 	
@@ -262,7 +279,10 @@ int main()
 
 		double startUpdateTime = clock();
 
+
 		_chunkManager.bufferPlayer = player;
+
+
 		_chunkManager.preRender();
 		//_chunkManager.FreeOldChunks(player);
 		//_chunkManager.createChunks(player);
@@ -318,25 +338,25 @@ int main()
 
 			controller.Rotate(x, y, 70, 70);
 
-			controller.Move(player, 0.04f, bufferChunkAssignedVBO);
+			controller.Move(player, 4.0f / worldScale, bufferChunkAssignedVBO);
 			
 
 			if (GetAsyncKeyState('T'))
 			{
 				GLuint fogDistance = glGetUniformLocation(ShaderProgram.ID, "fogDistance");
-				glUniform1f(fogDistance, ((offset - (1 + (offset / 10))) * chunkSize) / 100);
+				glUniform1f(fogDistance, ((offset - (1 + (offset / 10))) * chunkSize) / worldScale);
 
 				GLuint fogLength = glGetUniformLocation(ShaderProgram.ID, "fogLength");
-				glUniform1f(fogLength, (offset * 1.0f) / 100);
+				glUniform1f(fogLength, (offset * 1.0f) / worldScale);
 			}
 
 			if (GetAsyncKeyState('U'))
 			{
 				GLuint fogDistance = glGetUniformLocation(ShaderProgram.ID, "fogDistance");
-				glUniform1f(fogDistance, (10000000 + (offset - (1 + (offset / 10))) * 16) / 100);
+				glUniform1f(fogDistance, (10000000 + (offset - (1 + (offset / 10))) * 16) / worldScale);
 
 				GLuint fogLength = glGetUniformLocation(ShaderProgram.ID, "fogLength");
-				glUniform1f(fogLength, (offset * 1.0f) / 100);
+				glUniform1f(fogLength, (offset * 1.0f) / worldScale);
 			}
 				
 
@@ -404,19 +424,15 @@ int main()
 
 			RenderLines(VAO1, vboOutline, 1 ,eboOutline, 24);
 
-		
 
 			glClear(GL_DEPTH_BUFFER_BIT);
+
+			inv.renderLowInv(VAO1, hotbarTexture, grassTexture);
+
 			glDisable(GL_BLEND);
 
 			RenderObjects(VAO1, vboHandBlock, 0, eboHandBlock, 36);
 
-			glEnable(GL_BLEND);
-
-			inv.renderLowInv(VAO1, hotbarTexture, grassTexture);
-
-			ShaderProgram.Activate();
-			VAO1.Bind();
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();
@@ -436,9 +452,20 @@ int main()
 
 				updateTime = 0;
 				fps = 0;
+
+				GLuint offsetX = glGetUniformLocation(ShaderProgram.ID, "offsetX");
+				glUniform1f(offsetX, -player.position[0] / worldScale);
+
+				GLuint offsetY = glGetUniformLocation(ShaderProgram.ID, "offsetY");
+				glUniform1f(offsetY, -player.position[2] / worldScale);
+
+				GLuint offsetZ = glGetUniformLocation(ShaderProgram.ID, "offsetZ");
+				glUniform1f(offsetZ, -player.position[1] / worldScale);
+
+				cam.view = cam.defaultView;
 			}
 
-			//for (int i = 0; i < 1000; i++)
+			//for (int i = 0; i < worldScale0; i++)
 				//std::cout << "adslkjfkajfsaòlsafjdòlkasfjlòsafjlòjasflkd";
 
 		}

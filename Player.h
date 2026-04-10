@@ -14,9 +14,9 @@ private:
 
 public:
 
-	double position[3];
+	double position[3] = { 0, 0, 0 };
 	bool lookingBlock = false;
-	glm::dvec3 rayPoint;
+	glm::dvec3 rayPoint = glm::dvec3(0, 0, 0);
 	
 	void set();
 	void getLookingBlock(std::unordered_map<int, std::unordered_map<int, std::array<int, 2>>>& chunkAssignedVBO);

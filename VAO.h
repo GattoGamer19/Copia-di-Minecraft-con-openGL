@@ -12,8 +12,8 @@ public:
 
 	VAO();
 
-	void LinkVBO(VBO VBO, int nDati, GLuint layout, GLuint id, GLuint stride, int offset, GLuint varType);
-	void LinkEBO(EBO EBO, GLuint layout);
+	void LinkVBO(VBO& VBO, int nDati, GLuint layout, GLuint id, GLuint stride, int offset, GLuint varType);
+	void LinkEBO(EBO& EBO, GLuint layout);
 
 	void Unbind();
 	void Bind();

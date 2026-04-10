@@ -10,7 +10,9 @@ in float dist;
 
 uniform sampler2D tex0;
 uniform float fogDistance;
+uniform float fogDistance1;
 uniform float fogLength;
+uniform float fogLength1;
 vec4 highLightTexture;
 
 void main()
@@ -25,15 +27,22 @@ void main()
    }
 
 
+   
+        if(dist > fogDistance1 && (Count > 7 || Count < 0))
+        {  
+            float t = -(fogDistance1 - dist) / fogLength1;
+             FragColor = vec4(FragColor.x + (0.411f - FragColor.x) * t, FragColor.y + (0.827f - FragColor.y) * t, FragColor.z + (1 - FragColor.z) * t, 1.0f);
+             
+        }   
+
         if(dist > fogDistance && (Count > 7 || Count < 0))
         { 
              float t = -(fogDistance - dist) / fogLength;
              FragColor = vec4(FragColor.x + (0.411f - FragColor.x) * t, FragColor.y + (0.827f - FragColor.y) * t, FragColor.z + (1 - FragColor.z) * t, 1.0f);
-             
-             if(dist > fogLength + fogDistance)
+
+              if(dist > fogLength + fogDistance)
              FragColor.w = 0.0f;
-             
-        }     
+        }  
 
 
 }

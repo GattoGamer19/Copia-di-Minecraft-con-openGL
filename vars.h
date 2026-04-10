@@ -14,6 +14,9 @@
 
 
 inline std::mutex mutex;
+inline std::mutex mutexChunk;
+inline std::mutex mutexVBO;
+
 
 inline 	int nThreads = 5;
 
@@ -74,7 +77,7 @@ inline std::vector<std::vector<Chunk>> chunk(nChunkX, std::vector<Chunk>(nChunkZ
 inline std::vector<std::vector<bool>> isVisible(nChunkX, std::vector<bool>(nChunkZ));
 
 
-inline std::unordered_map<int, std::unordered_map<int, std::atomic<bool> >> isCreated;
+inline std::unordered_map<int, std::unordered_map<int, std::atomic<int> >> isCreated;
 inline std::unordered_map<int, std::unordered_map<int, bool >> hasBeenModified;
 inline std::unordered_map<int, std::unordered_map<int, std::vector<unsigned char>>> chunkBlocks;
 inline std::unordered_map<int, std::unordered_map<int, std::array<int, 2>>> bufferChunkAssignedVBO;
@@ -92,8 +95,8 @@ inline bool isJumping = false;
 inline bool creativeMode = true;
 inline int click = 0;
 
-inline std::vector<std::vector<float>> allVerticesZ(nThreads, std::vector<float>(216 * chunkSize * chunkSize * sizeY));
-inline std::vector<float> allVerticesX(216 * chunkSize * chunkSize * sizeY);
+inline std::vector<std::vector<float>> allVerticesZ(nThreads, std::vector<float>(216 * chunkSize * chunkSize * sizeY / 10));
+inline std::vector<float> allVerticesX(216 * chunkSize * chunkSize * sizeY / 10);
 
 inline int refreshCountZ = 0;
 inline int refreshCountX = 0;
