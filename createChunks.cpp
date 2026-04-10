@@ -328,12 +328,12 @@ void chunkManager::createChunks()
 
 												else
 												{
-													chunk[i][j].scale = 1;
+													chunk[xVBO][zVBO].scale = 1;
 													assignedVBO[xVBO][zVBO] = true;
 													vbo[xVBO][zVBO].meshCount = 8;
 
-													_createChunksInd[stop][0] = i;
-													_createChunksInd[stop][1] = j;
+													_createChunksInd[stop][0] = xVBO;
+													_createChunksInd[stop][1] = zVBO;
 
 												}
 
@@ -363,12 +363,12 @@ void chunkManager::createChunks()
 
 												else 
 												{
-													chunk[i][j].scale = 1;
+													chunk[xVBO][zVBO].scale = 1;
 													assignedVBO[xVBO][zVBO] = true;
 													vbo[xVBO][zVBO].meshCount = 8;
 
-													_createChunksInd[stop][0] = i;
-													_createChunksInd[stop][1] = j;
+													_createChunksInd[stop][0] = xVBO;
+													_createChunksInd[stop][1] = zVBO;
 
 													std::cout << "bau" << '\n';
 
