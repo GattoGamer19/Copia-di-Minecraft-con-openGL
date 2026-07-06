@@ -5,7 +5,4 @@
 
 cose che un giorno farò:
 
--risolvere un "bug" che si manifesta quando il rapporto fps/velocità in gioco è troppo alto si formano dei buchi perchè alcuni chunk non hanno il tempo di generarsi.
--aggiungere gli alberi.
--aggiungere il cielo.
--poter salvare i "progressi" fatti.
+basta, progetto chiuso(probabilmente).
