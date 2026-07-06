@@ -34,7 +34,8 @@ private:
 	int xVisibleInd = nChunkX + 1;
 	int zVisibleInd = nChunkX + 1;
 
-	int lodDist = 1110.5 * (128 / chunkSize);
+	int lodDist = 5 * (128 / chunkSize);
+	int maxScale = 4;
 
 	std::vector<bool> visibleChunksRot;
 
@@ -65,9 +66,11 @@ public:
 	std::vector<bool> bufferFinishedChunks;
 
 	std::unordered_map<int, std::unordered_map<int, std::array<int,2>>> chunkAssignedVBO;
+	std::unordered_map<int, std::unordered_map<int, int>> chunkAssignedOffset;
 	
 	std::vector<std::vector<bool>> assignedVBO;
 	std::vector<std::vector<doppio>> vboAssignedChunk;
+
 
 	bool createdFirstChunks = false;
 	std::atomic<int> updateChunkVBOCount = 30;

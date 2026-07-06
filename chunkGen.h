@@ -8,7 +8,7 @@
 #include "VAO.h"
 #include <unordered_map>
 
-#define chunkSize 32
+#define chunkSize 64
 
 class Chunk
 {

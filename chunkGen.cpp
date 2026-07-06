@@ -1680,20 +1680,6 @@ void Chunk::Create(int x1, int y1, VBO& vbo, EBO& ebo, std::vector<float>& allVe
 
 	}
 	
-	mutexVBO.lock();
-	vbo.allVertices[offset].resize(verticesSize);
-	
-	mutexVBO.unlock();
-
-	for (int i = 0; i < verticesSize; i++)
-	{
-		vbo.allVertices[offset][i] = allVertices[i];
-	}
-
-
-	vbo.verticesInizialized = true;
-
-	offsetC = offset;
 
 	created = true;
 	std::cout << "chunkCreated" << '\n';
@@ -1704,17 +1690,17 @@ void Chunk::preRender(GLuint vbo, std::vector<float>& allVertices, EBO& ebo, int
 {
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, _verticesSize, allVertices.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, verticesSize * sizeof(float), allVertices.data(), GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo.id);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, ebo.indices[8].size() * sizeof(GLuint), ebo.indices[8].data(), GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices0.size() * sizeof(GLuint), indices0.data(), GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	
 
 	//allVertices.resize(216 * chunkSize * chunkSize * sizeY);
 
-	indexNumbers = ebo.indices[8].size();
-	indexNumber = ebo.indices[8].size();
+	indexNumbers = indices0.size();
+	indexNumber = indices0.size();
 
 	//indices0 = std::vector<GLuint>();
 

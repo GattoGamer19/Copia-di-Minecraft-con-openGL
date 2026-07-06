@@ -37,6 +37,9 @@ void chunkManager::set()
 
 	threads.resize(nThreads);
 
+	chunk.resize(chunk.size() + 1);
+	chunk[chunk.size() - 1].resize(nThreads);
+
 	countChunks1 = 12039818;
 
 	for (int i = 0; i < nChunkX; i++)
@@ -58,6 +61,8 @@ void chunkManager::set()
 		_createChunksOffset.at(j) = 0;
 
 		threads.at(j) = std::thread(&chunkManager::chunkThreads, this, j);
+
+		chunk[chunk.size() - 1][j] = {};
 
 	}
 	mutex.unlock();
@@ -101,9 +106,6 @@ void chunkManager::findFirstFreeVBO(std::vector<std::vector<bool>>& assignedVBO,
 				x = i;
 				z = j;
 				
-				vbo[i][j].meshCount++;
-
-				if(vbo[i][j].meshCount >= 8)
 				assignedVBO[i][j] = true;
 
 				stop = true;
@@ -165,17 +167,8 @@ void chunkManager::FreeOldChunks()
 							
 							//mutex.unlock();
 
-							
-							vbo[i][j].meshCount--;
+							assignedVBO[i][j] = false;
 
-							if (vbo[i][j].meshCount <= 0 || isCreated[assignedChunk[0]][assignedChunk[1]] == 1)
-							{
-								vbo[i][j].verticesInizialized = false;
-
-								assignedVBO[i][j] = false;
-
-								vbo[i][j].meshCount = 0;
-							}
 
 							isCreated[assignedChunk[0]][assignedChunk[1]].store(0);
 
@@ -212,7 +205,6 @@ void chunkManager::createForReal(int thread)
 
 	int posX = _createChunksPos[thread][0];
 	int posZ = _createChunksPos[thread][1];
-
 
 	chunk[_Cx][_Cz].Create(posX, posZ, vbo[Cx][Cz], ebo[Cx][Cz], allVerticesZ[thread], _createModifiedChunks[thread], _createChunksOffset[thread]);
 	chunk[_Cx][_Cz].created = true;
@@ -287,27 +279,26 @@ void chunkManager::createChunks()
 								xVBO = chunkAssignedVBO[(currentChunk1[0] - offset) + (int)i][(currentChunk1[1] - offset) + (int)j][0];
 								zVBO = chunkAssignedVBO[(currentChunk1[0] - offset) + (int)i][(currentChunk1[1] - offset) + (int)j][1];
 
-								int cScale = chunk[i][j].scale;
+								int cScale = chunk[xVBO][zVBO].scale;
 
-								int hypScale = 1;
+								int hypScale = (int)(2 * (1 * (2 + (d - lodDist) / 20)));
 
-								if(d > lodDist)
-								hypScale = 4;
+								if (hypScale > maxScale)
+									hypScale = maxScale;
 
-								//int hypScale = (int)(2 * (1 * (1 + (d - lodDist) / 5)));
+								if (d <= lodDist)
+									hypScale = 1;
 
 
-
-								if ((!_isCreated))
+								if ((!_isCreated) || (cScale != hypScale))
 								{
-									if (!_isCreated)
-									{
-										findFirstFreeVBO(assignedVBO, xVBO, zVBO);
-									}
-									
+									if(!_isCreated)
+									findFirstFreeVBO(assignedVBO, xVBO, zVBO);			
 
 
-									_createChunksOffset[stop] = vbo[xVBO][zVBO].meshCount - 1;
+
+									_createChunksOffset[stop] = 0;
+									chunkAssignedOffset[(currentChunk1[0] - offset) + (int)i][(currentChunk1[1] - offset) + (int)j] = _createChunksOffset[stop];
 
 									if (xVBO != -1)
 									{
@@ -316,21 +307,23 @@ void chunkManager::createChunks()
 		
 												if (d > lodDist)
 												{
-													chunk[i][j].scale = 4;
-													chunk[i][j].size = 1;
+													chunk[xVBO][zVBO].scale = (int)(2 * (1 * (2 + (d - lodDist) / 20)));
+													if (chunk[xVBO][zVBO].scale > maxScale)
+														chunk[xVBO][zVBO].scale = maxScale;
+
+													chunk[xVBO][zVBO].size = 1;
 													//chunk[xVBO][zVBO].scale = 2;
 													
 
-													_createChunksInd[stop][0] = i;
-													_createChunksInd[stop][1] = j;
+													_createChunksInd[stop][0] = xVBO;
+													_createChunksInd[stop][1] = zVBO;
 
 												}
 
 												else
 												{
 													chunk[xVBO][zVBO].scale = 1;
-													assignedVBO[xVBO][zVBO] = true;
-													vbo[xVBO][zVBO].meshCount = 8;
+													vbo[xVBO][zVBO].meshCount = 0;
 
 													_createChunksInd[stop][0] = xVBO;
 													_createChunksInd[stop][1] = zVBO;
@@ -351,11 +344,13 @@ void chunkManager::createChunks()
 
 												if (d > lodDist)
 												{
-													chunk[i][j].scale = 4;
-													chunk[i][j].size = 1;
+													chunk[xVBO][zVBO].scale = (int)(2 * (1 * (2 + (d - lodDist) / 20)));
+													if (chunk[xVBO][zVBO].scale > maxScale)
+														chunk[xVBO][zVBO].scale = maxScale;
+													chunk[xVBO][zVBO].size = 1;
 
-													_createChunksInd[stop][0] = i;
-													_createChunksInd[stop][1] = j;
+													_createChunksInd[stop][0] = xVBO;
+													_createChunksInd[stop][1] = zVBO;
 
 													std::cout << "miao" << '\n';
 
@@ -364,8 +359,7 @@ void chunkManager::createChunks()
 												else 
 												{
 													chunk[xVBO][zVBO].scale = 1;
-													assignedVBO[xVBO][zVBO] = true;
-													vbo[xVBO][zVBO].meshCount = 8;
+													vbo[xVBO][zVBO].meshCount = 0;
 
 													_createChunksInd[stop][0] = xVBO;
 													_createChunksInd[stop][1] = zVBO;
@@ -416,7 +410,7 @@ void chunkManager::createChunks()
 											//mutex.lock();
 											isCreated[(currentChunk1[0] + (int)i) - offset][(currentChunk1[1] + (int)j) - offset].store(1);
 
-											if (chunk[i][j].scale > 1)
+											if (chunk[xVBO][zVBO].scale > 1)
 											{
 												isCreated[(currentChunk1[0] + (int)i) - offset][(currentChunk1[1] + (int)j) - offset].store(2);
 											}
@@ -687,12 +681,12 @@ void chunkManager::RenderChunks(VAO VAO1, Player player)
 					if (visibleChunksRot[index])
 					{
 
-						bool render = vbo[Cx][Cz].verticesInizialized;
+						bool render = chunk[Cx][Cz].ready;
 
 
 						if (render)
 						{
-							RenderObjects(VAO1, vbo[Cx][Cz], 1, ebo[Cx][Cz], ebo[Cx][Cz].indices[8].size());
+							RenderObjects(VAO1, vbo[Cx][Cz], 1, ebo[Cx][Cz], chunk[Cx][Cz].indexNumber);
 							vbo[Cx][Cz].rendered = true;
 							renderCount++;
 						}
@@ -704,12 +698,12 @@ void chunkManager::RenderChunks(VAO VAO1, Player player)
 					else if ((xRotation > 41) && (j <= (offset + plusX) && j >= (offset - plusX) && i <= (offset + plusY) && i >= (offset - plusY)))
 					{
 
-						bool render = vbo[Cx][Cz].verticesInizialized;
+						bool render = chunk[Cx][Cz].ready;
 
 
 						if (render)
 						{
-							RenderObjects(VAO1, vbo[Cx][Cz], 1, ebo[Cx][Cz], ebo[Cx][Cz].indices[8].size());
+							RenderObjects(VAO1, vbo[Cx][Cz], 1, ebo[Cx][Cz], chunk[Cx][Cz].indexNumber);
 							vbo[Cx][Cz].rendered = true;
 							renderCount++;
 						}
@@ -720,12 +714,12 @@ void chunkManager::RenderChunks(VAO VAO1, Player player)
 					{
 
 
-						bool render = vbo[Cx][Cz].verticesInizialized;
+						bool render = chunk[Cx][Cz].ready;
 
 
 						if (render)
 						{
-							RenderObjects(VAO1, vbo[Cx][Cz], 1, ebo[Cx][Cz], ebo[Cx][Cz].indices[8].size());
+							RenderObjects(VAO1, vbo[Cx][Cz], 1, ebo[Cx][Cz], chunk[Cx][Cz].indexNumber);
 							vbo[Cx][Cz].rendered = true;
 							renderCount++;
 						}
@@ -785,14 +779,8 @@ void chunkManager::preRender()
 				int Cx = _createChunks[i][0];
 				int Cz = _createChunks[i][1];
 
-				mutexVBO.lock();
 
-				vbo[Cx][Cz].mergeMeshes();
-				ebo[Cx][Cz].calcIndices(vbo[Cx][Cz].allVertices[8].size());
-
-				mutexVBO.unlock();
-
-				chunk[Cx][Cz].preRender(vbo[Cx][Cz].ids[1], vbo[Cx][Cz].allVertices[8], ebo[Cx][Cz], vbo[Cx][Cz].allVertices[8].size() * sizeof(float));
+				chunk[Cx][Cz].preRender(vbo[Cx][Cz].ids[1], allVerticesZ[i], ebo[Cx][Cz], 0);
 
 				mutexChunk.lock();
 				shouldPreRender[i] = false;
